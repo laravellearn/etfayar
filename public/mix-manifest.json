@@ -1,0 +1,14 @@
+{
+    "/js/app.js": "/js/app.js",
+    "/js/custom/prismjs.bundle.js": "/js/custom/prismjs.bundle.js",
+    "/js/scripts.bundle.js": "/js/scripts.bundle.js",
+    "/js/datatable/data-local.js": "/js/datatable/data-local.js",
+    "/css/app.css": "/css/app.css",
+    "/css/menu/light.rtl.css": "/css/menu/light.rtl.css",
+    "/css/brand/dark.rtl.css": "/css/brand/dark.rtl.css",
+    "/css/base/light.rtl.css": "/css/base/light.rtl.css",
+    "/css/aside/dark.rtl.css": "/css/aside/dark.rtl.css",
+    "/css/style.bundle.rtl.css": "/css/style.bundle.rtl.css",
+    "/css/login/login-5.rtl.css": "/css/login/login-5.rtl.css",
+    "/css/plugins.bundle.rtl.css": "/css/plugins.bundle.rtl.css"
+}

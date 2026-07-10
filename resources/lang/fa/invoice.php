@@ -1,0 +1,22 @@
+<?php
+return [
+    'invoices' => 'فاکتورهای تایید شده',
+    'pending' => 'فاکتورهای تایید نشده',
+    'title' => 'فاکتورها',
+    'add' => 'افزودن قطعات داغی',
+    'edit' => 'ویرایش قطعات داغی اضافه شده',
+    'code' => 'کد فاکتور',
+    'customer' => 'مشتری',
+    'invoice_title' => 'عنوان فاکتور',
+    'general_status' => 'وضعیت کلی',
+    'transport_status' => 'وضعیت ترابری',
+    'workshop_status' => 'وضعیت کارگاه',
+    'financial_status' => 'وضعیت مالی',
+    'download_invoice' => 'دانلود فاکتور',
+    'download_unofficial_invoice' => 'دانلود فاکتور غیر رسمی',
+    'download_official_invoice' => 'دانلود فاکتور رسمی',
+    'create_custom_invoice' => 'ایجاد فاکتور شخصی سازی شده',
+    'create_charge_card' => 'ایجاد کارت شارژ',
+    'agree' => 'تایید فاکتور',
+    'are_you_sure' => 'آیا اطمینان دارید؟',
+];

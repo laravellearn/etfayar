@@ -1,0 +1,28 @@
+<?php
+return [
+    'informations' => 'اطلاعات فروشندگان',
+    'add' => 'افزودن اطلاعات',
+    'edit' => 'ویرایش اطلاعات',
+    'name' => 'نام',
+    'logo' => 'لوگو',
+    'sign' => 'امضاء',
+    'header' => 'سربرگ',
+    'footer' => 'پابرگ',
+    'economic_code' => 'کد اقتصادی',
+    'postal_code' => 'کد پستی',
+    'national_code' => 'کد ملی',
+    'registration_number' => 'شماره ثبت',
+    'city_id' => 'شهر',
+    'bank_id' => 'بانک',
+    'area' => 'منطقه',
+    'postal_box' => 'صندوق پستی',
+    'address' => 'آدرس',
+    'location' => 'لوکیشن',
+    'telephone' => 'تلفن',
+    'type' => 'نوع سربرگ',
+    'choose_banks' => 'انتخاب حساب بانکی',
+    'header_type' => 'نوع سربرگ',
+    'unofficial' => 'غیررسمی',
+    'official' => 'رسمی',
+
+];
