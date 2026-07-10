@@ -181,7 +181,6 @@ return [
         App\Providers\PermissionServiceProvider::class,
         Hekmatinasser\Verta\Laravel\VertaServiceProvider::class,
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
-        Maatwebsite\Excel\ExcelServiceProvider::class,
         Melipayamak\Laravel\ServiceProvider::class,
     ],
 

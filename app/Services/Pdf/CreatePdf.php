@@ -7,7 +7,7 @@ use App\Models\Information;
 use App\Models\Bank;
 use App\Models\Preinvoice;
 use niklasravnsborg\LaravelPdf\Facades\Pdf;
-use Number2Word;
+use App\Helpers\Number2Word;
 
 class CreatePdf {
 
