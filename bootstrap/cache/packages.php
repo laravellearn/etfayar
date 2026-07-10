@@ -17,11 +17,11 @@
       0 => 'Hekmatinasser\\Verta\\Laravel\\VertaServiceProvider',
     ),
   ),
-  'laravel/sail' => 
+  'laravel/pail' => 
   array (
     'providers' => 
     array (
-      0 => 'Laravel\\Sail\\SailServiceProvider',
+      0 => 'Laravel\\Pail\\PailServiceProvider',
     ),
   ),
   'laravel/sanctum' => 
@@ -97,17 +97,6 @@
     'providers' => 
     array (
       0 => 'Termwind\\Laravel\\TermwindServiceProvider',
-    ),
-  ),
-  'spatie/laravel-ignition' => 
-  array (
-    'aliases' => 
-    array (
-      'Flare' => 'Spatie\\LaravelIgnition\\Facades\\Flare',
-    ),
-    'providers' => 
-    array (
-      0 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
     ),
   ),
 );
