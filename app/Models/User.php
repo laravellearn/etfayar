@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Calendar\PersianDate;
 use App\Services\Permission\Traits\HasPermissions;
 use App\Services\Permission\Traits\HasRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +13,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasPermissions, HasRole, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, HasPermissions, HasRole, SoftDeletes, PersianDate;
 
     protected $guard = 'web';
 

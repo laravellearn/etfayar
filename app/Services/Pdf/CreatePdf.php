@@ -4,7 +4,6 @@ namespace App\Services\Pdf;
 
 use App\Models\CustomInvoice;
 use App\Models\Information;
-use App\Models\Bank;
 use App\Models\Preinvoice;
 use niklasravnsborg\LaravelPdf\Facades\Pdf;
 use App\Helpers\Number2Word;
@@ -33,7 +32,7 @@ class CreatePdf {
         $data = [
             'title' => $single->title,
             'code' => $single->code,
-            'created_at' => $single->persianDate,
+            'created_at' => $single->is_invoice ? ($single->persianConfirmedAt ?? $single->persianDate) : $single->persianDate,
             'full_name' => $single->request->user->full_name ?? '',
             'telephone' => $single->request->user->telephone ?? '',
             'address' => $single->request->user->address->toStringAddress ?? '',
@@ -113,7 +112,7 @@ class CreatePdf {
             'title' => $single->title,
             'code' => $single->code,
             'invoice_counter' => $single->invoice_counter,
-            'created_at' => $single->persianDate,
+            'created_at' => $single->is_invoice ? ($single->persianConfirmedAt ?? $single->persianDate) : $single->persianDate,
             'user' => $single->request->user,
             'full_name' => $single->request->user->full_name ?? '',
             'telephone' => $single->request->user->telephone ?? '',
@@ -140,6 +139,11 @@ class CreatePdf {
             'logo' => $single->information->logo ?? null,
             'header' => $single->information->header ?? null,
             'footer' => $single->information->footer ?? null,
+            // حساب بانکی خودِ این فاکتور (اسنپ‌شات‌شده هنگام ثبت/ویرایش)، نه بانک فعلیِ information
+            'bank_name' => $single->bank_name ?? '',
+            'bank_account' => $single->bank_account ?? '',
+            'bank_sheba' => $single->bank_sheba ?? '',
+            'bank_cart_code' => $single->bank_cart_code ?? '',
         ];
 
         $pdf = PDF::loadView('pdf.official_invoice', $data, [], [
@@ -170,13 +174,11 @@ class CreatePdf {
 
         $totalPrice = collect($itemList)->sum('sum_price');
 
-        $bank = Bank::where('id', 4)->first();
-
         $tax = $single->tax;
         $data = [
             'title' => $single->title,
             'code' => $single->code,
-            'created_at' => $single->persianDate,
+            'created_at' => $single->is_invoice ? ($single->persianConfirmedAt ?? $single->persianDate) : $single->persianDate,
             'full_name' => $single->request->user->full_name ?? '',
             'telephone' => $single->request->user->telephone ?? '',
             'address' => $single->request->user->address->toStringAddress ?? '',
@@ -190,14 +192,12 @@ class CreatePdf {
             'logo' => $single->information->logo ?? null,
             'header' => $single->information->header ?? null,
             'footer' => $single->information->footer ?? null,
-            'bank_account_sheba' => $bank->sheba ?? '',   // <-- جدید
-            'bank_account_owner'  => $bank->name ?? '',
-            'bank_account_cart_code'  => $bank->cart_code ?? '',
-            'bank_account_account'  => $bank->account ?? '',
+            // حساب بانکی خودِ این فاکتور (اسنپ‌شات‌شده هنگام ثبت/ویرایش)، نه یک بانک ثابت
+            'bank_account_sheba' => $single->bank_sheba ?? '',
+            'bank_account_owner'  => $single->bank_name ?? '',
+            'bank_account_cart_code'  => $single->bank_cart_code ?? '',
+            'bank_account_account'  => $single->bank_account ?? '',
         ];
-        
-        // $bank = Bank::where('id',4)->first();
-        // dd($bank->name);
 
         $pdf = PDF::loadView('pdf.unofficial_invoice_custom', $data);
         $name = $title . ($single->request->user->full_name ?? '') . ' به شماره ' . $single->code . '.pdf';
@@ -237,7 +237,7 @@ class CreatePdf {
         $data = [
             'title' => $customInvoice->title,
             'code' => $single->code,
-            'created_at' => $single->persianDate,
+            'created_at' => $single->is_invoice ? ($single->persianConfirmedAt ?? $single->persianDate) : $single->persianDate,
             'full_name' => $single->request->user->full_name ?? '',
             'telephone' => $single->request->user->telephone ?? '',
             'address' => $single->request->user->address->toStringAddress ?? '',

@@ -152,6 +152,7 @@
                                 <th>@lang('user.customer_code')</th>
                                 <th>@lang('user.name_and_family')</th>
                                 <th>@lang('service.services')</th>
+                                <th>@lang('user.created_at')</th>
                                 <th>@lang('user.status')</th>
                                 <th>@lang('user.actions')</th>
                             </tr>
@@ -169,6 +170,7 @@
                                                 class="text-left label label-lg label-light-dark label-inline m-1">{{ $service->title }}</span>
                                         @endforeach
                                     </td>
+                                    <td nowrap>{{ $item->persian_date }}</td>
                                     <td nowrap>
                                         <div
                                             class="{{ $item->statusValue->class }}">{{ $item->statusValue->title }}</div>
@@ -235,7 +237,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center">هیچ کاربری یافت نشد.</td>
+                                    <td colspan="7" class="text-center">هیچ کاربری یافت نشد.</td>
                                 </tr>
                             @endforelse
                             </tbody>

@@ -33,6 +33,7 @@
                                 <th>@lang('invoice.invoice_title')</th>
                                 <th>تعداد آیتم ها</th>
                                 <th>@lang('common.created_at')</th>
+                                <th>@lang('invoice.confirmed_at')</th>
                                 <th>@lang('invoice.general_status')</th>
                                 <th>@lang('invoice.transport_status')</th>
                                 <th>@lang('invoice.workshop_status')</th>
@@ -50,6 +51,7 @@
                                     <td>{{$item->title}}</td>
                                     <td>{{count($item->items) + count($item->workshop->items??[]) }}</td>
                                     <td>{{$item->persianDateTime}}</td>
+                                    <td nowrap>{{$item->persianConfirmedAt}}</td>
                                     <td>
                                         <div
                                             class="text-nowrap {{ $item->generalStatusValue->class }}">{{ $item->generalStatusValue->title }}

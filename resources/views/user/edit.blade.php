@@ -52,6 +52,14 @@
                                 </div>
                             </div>
                             <div class="form-group row">
+                                <label class="col-3">@lang("user.created_at")</label>
+                                <div class="col-9">
+                                    <input class="form-control form-control" type="text" name="created_at_display"
+                                           id="created_at_display" value="{{$user->persian_date}}"
+                                           placeholder="@lang("user.created_at")" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group row">
                                 <label class="col-3">@lang("user.identity_type") <strong>*</strong></label>
                                 <div class="col-9">
                                     @php($items=[['title'=>'حقیقی','value'=>'natural'],['title'=>'حقوقی','value'=>'legal']])

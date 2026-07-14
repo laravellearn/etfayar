@@ -385,13 +385,13 @@
                         class="text-center p-1 font-size-small"
                         colspan="10">
                         حساب شرکت :
-                        {{$information->bank->name??''}} ، &nbsp;
+                        {{$bank_name??''}} ، &nbsp;
                         شماره حساب :
-                        <span style="color: red;font-weight: normal">{{$information->bank->account??''}}</span> ، &nbsp;
+                        <span style="color: red;font-weight: normal">{{$bank_account??''}}</span> ، &nbsp;
                         شماره شبا :
-                        <span style="color: red;font-weight: normal">{{$information->bank->sheba??''}}</span> ، &nbsp;
+                        <span style="color: red;font-weight: normal">{{$bank_sheba??''}}</span> ، &nbsp;
                         شماره کارت :
-                        <span style="color: red;font-weight: normal">{{$information->bank->cart_code??''}}</span>
+                        <span style="color: red;font-weight: normal">{{$bank_cart_code??''}}</span>
 
 
                     </td>

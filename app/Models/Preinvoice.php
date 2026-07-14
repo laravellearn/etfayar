@@ -39,6 +39,18 @@ class Preinvoice extends Model {
         return $this->belongsTo(Information::class);
     }
 
+    public function bank() {
+        return $this->belongsTo(Bank::class);
+    }
+
+    public function getPersianConfirmedAtAttribute() {
+        if (is_null($this->confirmed_at)) {
+            return null;
+        }
+        $v = new \Hekmatinasser\Verta\Verta($this->confirmed_at);
+        return $v->format('%d %B %Y');
+    }
+
     public function getGeneralStatusValueAttribute() {
         $status = new \stdClass();
         if ($this->status == 'pending') {

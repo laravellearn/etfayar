@@ -22,6 +22,15 @@ class InvoiceStore {
             $single->status = $request->status;
         }
 
+        $bank = $information->bank ?? null;
+        if (!is_null($bank)) {
+            $single->bank_id = $bank->id;
+            $single->bank_name = $bank->name;
+            $single->bank_account = $bank->account;
+            $single->bank_cart_code = $bank->cart_code;
+            $single->bank_sheba = $bank->sheba;
+        }
+
         $single->save();
         return $single;
     }

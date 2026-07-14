@@ -7,6 +7,7 @@ return [
     'edit' => 'ویرایش قطعات داغی اضافه شده',
     'code' => 'کد فاکتور',
     'customer' => 'مشتری',
+    'confirmed_at' => 'تاریخ تایید',
     'invoice_title' => 'عنوان فاکتور',
     'general_status' => 'وضعیت کلی',
     'transport_status' => 'وضعیت ترابری',

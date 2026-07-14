@@ -202,9 +202,9 @@
 
         </table>
 
-        <ul style="padding: 0;margin: 0;margin-right: 16px">
-            <li style="font-size: 12px;" class="p-1 font-weight-bolder">{{$description??''}}</li>
-        </ul>
+        <!--<ul style="padding: 0;margin: 0;margin-right: 16px">-->
+        <!--    <li style="font-size: 12px;" class="p-1 font-weight-bolder">{{$description??''}}</li>-->
+        <!--</ul>-->
 
     </div>
 </div>

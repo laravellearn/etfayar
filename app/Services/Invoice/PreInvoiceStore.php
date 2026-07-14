@@ -23,6 +23,7 @@ class PreInvoiceStore {
         if ($request->status != 'financial') {
             $single->status = $request->status;
         }
+        self::snapshot_bank($single, $information);
         $single->save();
         return $single;
     }
@@ -40,6 +41,7 @@ class PreInvoiceStore {
         if ($request->status != 'financial') {
             $single->status = $request->status;
         }
+        self::snapshot_bank($single, $information);
         $single->save();
         return $single;
     }
@@ -48,6 +50,22 @@ class PreInvoiceStore {
         $request = UserRequest::where('id', '=', $request_id)->first();
         $code = str_replace(['D', '-'], ['', '/'], $request->code);
         return $code;
+    }
+
+    /**
+     * حساب بانکی متصل به information انتخاب‌شده را روی خود فاکتور/پیش‌فاکتور
+     * کپی (اسنپ‌شات) می‌کند تا تغییرات بعدیِ حساب بانکی یا information،
+     * روی فاکتورهای قبلاً ثبت‌شده تاثیر نگذارد.
+     */
+    private static function snapshot_bank($single, $information) {
+        $bank = $information->bank ?? null;
+        if (!is_null($bank)) {
+            $single->bank_id = $bank->id;
+            $single->bank_name = $bank->name;
+            $single->bank_account = $bank->account;
+            $single->bank_cart_code = $bank->cart_code;
+            $single->bank_sheba = $bank->sheba;
+        }
     }
 
     public static function change_to_invoice($id) {
@@ -63,6 +81,7 @@ class PreInvoiceStore {
             ProductManager::update_products_quantity($single->items);
             $single->is_invoice = true;
             $single->status = 'financial';
+            $single->confirmed_at = now();
             $single->save();
             return null;
         } else {

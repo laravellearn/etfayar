@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href={{ asset('css/bootstrap/bootstrap.min.css') }}>
-    <title>پیش فاکتور | {{$full_name}}</title>
+    <title> فاکتور | {{$full_name}}</title>
     <style>
         body {
             font-family: primary_font, sans-serif;
@@ -15,7 +15,7 @@
         #container {
             width: 100%;
             height: 100%;
-            padding: 10px 20px;
+            padding: 0px 10px;
             background-position: 0% 0%;
             background-size: 100% 100%;
             background: url({{asset('/storage/'.$header)}}) no-repeat;
@@ -23,7 +23,7 @@
 
         #title_container {
             text-align: center;
-            padding-top: 0px !important;
+            padding-top: 0.01px !important;
         }
 
         #title {
@@ -34,14 +34,14 @@
         #number_container {
             text-align: right !important;
             float: right;
-            padding-bottom: 0px;
+            padding-bottom: 5px;
         }
 
         #information_container {
             border: 0.03em solid #3f3f3f;
             /*border-top-left-radius: 20px;*/
             /*border-top-right-radius: 20px;*/
-            padding: 5px 10px;
+            padding: 0px 1px;
         }
 
         #items_container {
@@ -124,9 +124,7 @@
     </div>
     <div id="number_container">
         <div>
-            <div><small> تاریخ : {{$created_at}}</small>
-            &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <small> شماره : {{$code}}</small></div>
+            <div><small> تاریخ : {{$created_at}}</small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <small> شماره : {{$code}}</small>
         </div>
     </div>
     <div id="information_container">
@@ -176,45 +174,49 @@
             </tbody>
             <tfoot>
             <tr class="">
-                <td class="text-center p-2" colspan="3"><span
-                        class="font-size-lg font-weight-bolder mb-1">جمع مبلغ کل : </span></td>
+                    colspan="2">{{number_format($totalPrice, 0, '.', ',')}} @lang('common.pricePrefix')</td>
+            <tr class="">
+                <td class="text-center p-2" colspan="3"><span class="font-size-lg font-weight-bolder mb-1">مبلغ قابل پرداخت : </span>
+                </td>
                 <td class="text-center p-2"
-                    colspan="1">{{number_format($totalPrice, 0, '.', ',')}} @lang('common.pricePrefix')</td>
+                    colspan="2">{{number_format($paymentPrice, 0, '.', ',')}} @lang('common.pricePrefix')</td>
             </tr>
+
+
             </tfoot>
 
         </table>
 
-        <ul style="padding: 0;margin: 0;margin-right: 16px">
-            @foreach($descriptions as $desc)
-                <li style="font-size: 8pt;margin: 0;padding: 0"><span>{{$desc->description->description}}</span></li>
-            @endforeach
-            <li class="p-1 font-weight-bolder">{{$description??''}}</li>
+        <!--<ul style="padding: 0;margin: 0;margin-right: 16px">-->
+        <!--    @foreach($descriptions as $desc)-->
+        <!--        <li style="font-size: 8pt;margin: 0;padding: 0"><span>{{$desc->description->description}}</span></li>-->
+        <!--    @endforeach-->
+        <!--    <li class="p-1 font-weight-bolder">{{$description??''}}</li>-->
 
-        </ul>
+        <!--</ul>-->
 
         @if(!is_null($sign))
-            <img style="float: left; width: 0%;background-color: #ffffff;"
+            <img style="float: left; width: 20%;background-color: #ffffff;"
                  src="{{asset('storage/'.$sign)}}" alt="">
         @endif
     </div>
     @if(!is_null($sign))
-    <img style="float: left; width: 0%;background-color: #ffffff;"
+    <img style="float: left; width: 20%;background-color: #ffffff;"
          src="{{asset('storage/'.$sign)}}" alt="">
 @endif
 
-<div id="bank_info_container" style="clear: both; margin-top: 0px; border-top: 0.01em dashed #ccc; padding-top: 1px;">
+<div id="bank_info_container" style="clear: both; margin-top: 0px; padding-top: 0px;">
     <span><strong>به نام :</strong> <small>{{$bank_account_owner}}</small></span>
-    &nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;
     <span><strong>شماره شبا :</strong> <small>{{$bank_account_sheba}}</small></span>
-        &nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;&nbsp;
     <span><strong>شماره کارت :</strong> <small>{{$bank_account_cart_code}}</small></span>
-            &nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;
     <span><strong>شماره حساب :</strong> <small>{{$bank_account_account}}</small></span>
 
 </div>
 
-    <div style="width: 100%;margin-top:10px">
+    <div style="width: 100%;margin-top:0px">
 
         &nbsp;&nbsp;
         &nbsp;&nbsp;
