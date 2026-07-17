@@ -138,6 +138,15 @@ if ($request->filled('telephone')) {
 
 public function store(Request $request): RedirectResponse
 {
+    // ردیف‌های خالیِ شماره تماس اضافه رو قبل از اعتبارسنجی حذف کن؛ وگرنه چند مقدار
+    // خالی/تکراری در group_mobile باعث شکست قانون distinct می‌شن و بدون خطای قابل توجه
+    // فرم ذخیره نمی‌شه.
+    $request->merge([
+        'group_mobile' => collect($request->group_mobile ?? [])
+            ->filter(fn($item) => !empty($item['mobile'] ?? null))
+            ->values()
+            ->all(),
+    ]);
 
     $request->validate([
         'name' => 'required_if:identity_type,natural',
@@ -231,6 +240,16 @@ public function store(Request $request): RedirectResponse
 
 public function update(Request $request): RedirectResponse
 {
+    // ردیف‌های خالیِ شماره تماس اضافه رو قبل از اعتبارسنجی حذف کن؛ وگرنه چند مقدار
+    // خالی/تکراری در group_mobile باعث شکست قانون distinct می‌شن و بدون خطای قابل توجه
+    // فرم ذخیره نمی‌شه.
+    $request->merge([
+        'group_mobile' => collect($request->group_mobile ?? [])
+            ->filter(fn($item) => !empty($item['mobile'] ?? null))
+            ->values()
+            ->all(),
+    ]);
+
     $request->validate([
         'name' => 'required_if:identity_type,natural',
         'family' => 'required_if:identity_type,natural',

@@ -1,0 +1,8 @@
+php artisan migrate
+
+--برای حساب های بانکی فاکتور ها و تاریخ تایید فاکتور های قبلی
+php artisan preinvoices:backfill-snapshots              # اجرای واقعی
+
+
+--برای تایم های 4 تایی ترابری 
+php artisan transports:backfill-visit-time

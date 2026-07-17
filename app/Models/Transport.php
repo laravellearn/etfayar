@@ -142,5 +142,35 @@ class Transport extends Model {
         return $v->format('Y/n/j');
     }
 
+    /**
+     * متن نمایشیِ دو بازه‌ی زمانیِ مراجعه، مثلا:
+     * «از ساعت 09:00 تا ساعت 12:00 و از ساعت 14:00 تا ساعت 17:00»
+     * برای رکوردهای قدیمی که فقط visit_time تکی داشتند، همان مقدار قبلی نمایش داده می‌شود.
+     */
+    public function getVisitTimeRangeTextAttribute() {
+        $ranges = [];
+
+        if (!is_null($this->visit_time_from_1) || !is_null($this->visit_time_to_1)) {
+            $ranges[] = 'از ساعت ' . $this->shortTime($this->visit_time_from_1) . ' تا ساعت ' . $this->shortTime($this->visit_time_to_1);
+        }
+
+        if (!is_null($this->visit_time_from_2) || !is_null($this->visit_time_to_2)) {
+            $ranges[] = 'از ساعت ' . $this->shortTime($this->visit_time_from_2) . ' تا ساعت ' . $this->shortTime($this->visit_time_to_2);
+        }
+
+        if (!empty($ranges)) {
+            return implode(' و ', $ranges);
+        }
+
+        return $this->visit_time ?? '';
+    }
+
+    private function shortTime($time) {
+        if (is_null($time)) {
+            return '';
+        }
+        return substr($time, 0, 5);
+    }
+
 
 }

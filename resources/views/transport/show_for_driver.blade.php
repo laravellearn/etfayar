@@ -148,7 +148,7 @@
 
                     @php($title=__("preinvoice.visit_time"))
                     @php($caption='')
-                    @php($value=$single->visit_time??'')
+                    @php($value=$single->visitTimeRangeText??'')
                     <x-InputRow dir="ltr" :title="$title" name="visit_time" id="visit_time" :value="$value"
                                 :caption="$caption" type="text"
                                 icon="bx bx-time" disabled="disabled">

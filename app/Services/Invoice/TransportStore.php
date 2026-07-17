@@ -11,7 +11,10 @@ class TransportStore {
         $transport = Transport::query()->where('preinvoice_id', '=', $single->id)->firstOrNew();
         $transport->admin_id = auth('admin')->id();
         $transport->preinvoice_id = $single->id;
-        $transport->visit_time = $request->visit_time;
+        $transport->visit_time_from_1 = $request->visit_time_from_1;
+        $transport->visit_time_to_1 = $request->visit_time_to_1;
+        $transport->visit_time_from_2 = $request->visit_time_from_2;
+        $transport->visit_time_to_2 = $request->visit_time_to_2;
         $transport->visit_date =  self::convert_jalali_to_gergorian($request->visit_date);
         $transport->delivery_duration = $request->delivery_duration;
         $transport->description = $request->additional_description;
