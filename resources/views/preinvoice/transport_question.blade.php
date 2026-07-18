@@ -12,28 +12,28 @@
     @php($title=__("preinvoice.visit_time_from_1"))
     @php($caption='')
     @php($value=$transport->visit_time_from_1??'')
-    <x-InputRow dir="ltr" :title="$title" name="visit_time_from_1" id="visit_time_from_1" :value="$value" :caption="$caption" type="text"
+    <x-InputRow dir="ltr" :title="$title" name="visit_time_from_1" id="visit_time_from_1" :value="$value" :caption="$caption" type="time"
                 icon="bx bx-time">
     </x-InputRow>
 
     @php($title=__("preinvoice.visit_time_to_1"))
     @php($caption='')
     @php($value=$transport->visit_time_to_1??'')
-    <x-InputRow dir="ltr" :title="$title" name="visit_time_to_1" id="visit_time_to_1" :value="$value" :caption="$caption" type="text"
+    <x-InputRow dir="ltr" :title="$title" name="visit_time_to_1" id="visit_time_to_1" :value="$value" :caption="$caption" type="time"
                 icon="bx bx-time">
     </x-InputRow>
 
     @php($title=__("preinvoice.visit_time_from_2"))
     @php($caption='')
     @php($value=$transport->visit_time_from_2??'')
-    <x-InputRow dir="ltr" :title="$title" name="visit_time_from_2" id="visit_time_from_2" :value="$value" :caption="$caption" type="text"
+    <x-InputRow dir="ltr" :title="$title" name="visit_time_from_2" id="visit_time_from_2" :value="$value" :caption="$caption" type="time"
                 icon="bx bx-time">
     </x-InputRow>
 
     @php($title=__("preinvoice.visit_time_to_2"))
     @php($caption='')
     @php($value=$transport->visit_time_to_2??'')
-    <x-InputRow dir="ltr" :title="$title" name="visit_time_to_2" id="visit_time_to_2" :value="$value" :caption="$caption" type="text"
+    <x-InputRow dir="ltr" :title="$title" name="visit_time_to_2" id="visit_time_to_2" :value="$value" :caption="$caption" type="time"
                 icon="bx bx-time">
     </x-InputRow>
 

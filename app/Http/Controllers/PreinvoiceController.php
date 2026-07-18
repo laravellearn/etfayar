@@ -42,6 +42,7 @@ class PreinvoiceController extends Controller {
             ->where('status', '!=', 'financial')
             ->whereHas('request')
             ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
         return view('preinvoice.list', compact('list', 'title'));
     }

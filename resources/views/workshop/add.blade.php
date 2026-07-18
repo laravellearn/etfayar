@@ -110,6 +110,12 @@
                         </div>
                     </div>
 
+                    @php($title=__("workshop.description"))
+                    @php($value=$workshop->description??'')
+                    <x-InputText :title="$title" name="description" id="description" :value="$value"
+                                 caption="" type="text" icon="bx bx-text">
+                    </x-InputText>
+
                 </div>
                 @include('partials.card_footer')
             </form>

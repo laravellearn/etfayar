@@ -6,3 +6,5 @@ php artisan preinvoices:backfill-snapshots              # اجرای واقعی
 
 --برای تایم های 4 تایی ترابری 
 php artisan transports:backfill-visit-time
+
+php artisan preinvoices:backfill-snapshots

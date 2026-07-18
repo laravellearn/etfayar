@@ -28,11 +28,20 @@ class WorkshopController extends Controller {
         $fireExtinguisherParts = FireExtinguisherPart::all();
         $workshop = Workshop::query()->with('items')->where('id', '=', $id)->firstOrNew();
         $workshopItems = $workshop->items->toArray();
-        return view('workshop.add', compact('title', 'fireExtinguisherParts', 'id', 'workshopItems'));
+        return view('workshop.add', compact('title', 'fireExtinguisherParts', 'id', 'workshopItems', 'workshop'));
     }
 
     public function store(Request $request) {
         $workshop = Workshop::query()->where('id', '=', $request->id)->firstOrNew();
+
+        // قیمت‌های قبلاً ثبت‌شده‌ی هر قطعه رو قبل از حذف نگه می‌داریم؛ چون این متد
+        // همیشه آیتم‌های قبلی رو پاک و از نو می‌سازه، بدون این کار، تغییر قیمت یک
+        // قطعه در «لیست قیمت داغی‌ها» با هر بار ویرایش این داغی (حتی برای افزودن یک
+        // قطعه‌ی جدید یا تغییر تعداد)، قیمت قطعات قبلاً ثبت‌شده رو هم بازنویسی می‌کرد.
+        $previousPrices = $workshop->exists
+            ? $workshop->items()->pluck('price', 'fire_extinguisher_part_id')->all()
+            : [];
+
         $workshop->items()->delete();
         if (!empty($request->group_item)) {
 
@@ -42,15 +51,21 @@ class WorkshopController extends Controller {
                 $workshopItem->fire_extinguisher_part_id = $item['fireExtinguisherPart_id'];
                 $fireExtinguisherPart = FireExtinguisherPart::where('id', '=', $item['fireExtinguisherPart_id'])->first();
                 $workshopItem->count = $item['count'];
-                $workshopItem->price = $fireExtinguisherPart->price;
+                // اگر این قطعه قبلاً برای همین داغی ثبت شده بود، قیمت قبلی (فریزشده) حفظ
+                // می‌شه؛ فقط برای قطعه‌ی تازه‌اضافه‌شده از قیمت فعلیِ لیست قیمت استفاده می‌شه.
+                $workshopItem->price = $previousPrices[$item['fireExtinguisherPart_id']] ?? $fireExtinguisherPart->price;
                 $workshopItem->title = $fireExtinguisherPart->title;
                 $workshopItem->save();
             }
 
-            $workshop->status = 1;
-            $workshop->save();
-
         }
+
+        // توضیحات و وضعیت همیشه ذخیره بشه، حتی اگه به هر دلیلی هیچ قطعه‌ای انتخاب نشده باشه.
+        // تاریخ ثبت (created_at) به‌صورت خودکار توسط خود لاراول برای رکورد جدید ثبت می‌شه.
+        $workshop->description = $request->description;
+        $workshop->status = 1;
+        $workshop->save();
+
         return redirect()->route('workshop.doneTasks');
 
     }

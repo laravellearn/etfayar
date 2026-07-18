@@ -53,7 +53,7 @@ class PreInvoiceStore {
     }
 
     /**
-     * حساب بانکی متصل به information انتخاب‌شده را روی خود فاکتور/پیش‌فاکتور
+     * حساب بانکی و مشخصات فروشنده (information) را روی خود فاکتور/پیش‌فاکتور
      * کپی (اسنپ‌شات) می‌کند تا تغییرات بعدیِ حساب بانکی یا information،
      * روی فاکتورهای قبلاً ثبت‌شده تاثیر نگذارد.
      */
@@ -65,6 +65,14 @@ class PreInvoiceStore {
             $single->bank_account = $bank->account;
             $single->bank_cart_code = $bank->cart_code;
             $single->bank_sheba = $bank->sheba;
+        }
+
+        if (!is_null($information)) {
+            $single->seller_name = $information->name;
+            $single->seller_economic_code = $information->economic_code;
+            $single->seller_postal_code = $information->postal_code;
+            $single->seller_national_code = $information->national_code;
+            $single->seller_registration_number = $information->registration_number;
         }
     }
 

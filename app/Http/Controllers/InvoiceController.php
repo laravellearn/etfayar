@@ -41,6 +41,7 @@ class InvoiceController extends Controller {
             ->where('is_invoice', '=', true)
             ->whereHas('request')
             ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
         return view('invoice.list', compact('list', 'title'));
     }
@@ -52,6 +53,7 @@ class InvoiceController extends Controller {
             ->where('status', 'financial')
             ->whereHas('request')
             ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
         return view('invoice.list_pending', compact('list', 'title'));
     }

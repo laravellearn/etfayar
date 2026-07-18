@@ -170,19 +170,19 @@
         <div id="seller_title_container">مشخصات فروشنده</div>
         <div id="information_container">
             <div>
-                <span> <strong>نام شخص حقیقی / حقوقی :</strong> <small>{{$information->name??''}}</small></span>
+                <span> <strong>نام شخص حقیقی / حقوقی :</strong> <small>{{$seller_name??''}}</small></span>
                 &nbsp;&nbsp;
                 &nbsp;&nbsp;
-                <span> <strong>کد اقتصادی :</strong> <small>{{$information->economic_code??''}}</small></span>
+                <span> <strong>کد اقتصادی :</strong> <small>{{$seller_economic_code??''}}</small></span>
                 &nbsp;&nbsp;
                 &nbsp;&nbsp;
-                <span> <strong>کد پستی 10 رقمی :</strong> <small>{{$information->postal_code??''}}</small></span>
+                <span> <strong>کد پستی 10 رقمی :</strong> <small>{{$seller_postal_code??''}}</small></span>
                 &nbsp;&nbsp;
                 &nbsp;&nbsp;
-                <span> <strong>شناسه ملی :</strong> <small>{{$information->national_code??''}}</small></span>
+                <span> <strong>شناسه ملی :</strong> <small>{{$seller_national_code??''}}</small></span>
                 &nbsp;&nbsp;
                 &nbsp;&nbsp;
-                <span> <strong>شماره ثبت :</strong> <small>{{$information->registration_numbe??''}}</small></span>
+                <span> <strong>شماره ثبت :</strong> <small>{{$seller_registration_number??''}}</small></span>
 
 
             </div>

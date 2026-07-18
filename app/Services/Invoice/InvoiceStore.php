@@ -31,6 +31,14 @@ class InvoiceStore {
             $single->bank_sheba = $bank->sheba;
         }
 
+        if (!is_null($information)) {
+            $single->seller_name = $information->name;
+            $single->seller_economic_code = $information->economic_code;
+            $single->seller_postal_code = $information->postal_code;
+            $single->seller_national_code = $information->national_code;
+            $single->seller_registration_number = $information->registration_number;
+        }
+
         $single->save();
         return $single;
     }

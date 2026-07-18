@@ -144,6 +144,12 @@ class CreatePdf {
             'bank_account' => $single->bank_account ?? '',
             'bank_sheba' => $single->bank_sheba ?? '',
             'bank_cart_code' => $single->bank_cart_code ?? '',
+            // مشخصات فروشنده خودِ این فاکتور (اسنپ‌شات‌شده هنگام ثبت/ویرایش)، نه information فعلی
+            'seller_name' => $single->seller_name ?? '',
+            'seller_economic_code' => $single->seller_economic_code ?? '',
+            'seller_postal_code' => $single->seller_postal_code ?? '',
+            'seller_national_code' => $single->seller_national_code ?? '',
+            'seller_registration_number' => $single->seller_registration_number ?? '',
         ];
 
         $pdf = PDF::loadView('pdf.official_invoice', $data, [], [
