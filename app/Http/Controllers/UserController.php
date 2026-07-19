@@ -183,6 +183,7 @@ public function store(Request $request): RedirectResponse
         $user->mobile_owner = $request->mobile_owner;
         $user->email = $request->email;
         $user->customer_code = $this->generate_customer_code();
+        $user->notes = $request->notes;
         $user->save();
 
         $userAddress = new UserAddress();
@@ -285,6 +286,7 @@ public function update(Request $request): RedirectResponse
         $user->mobile_owner = $request->mobile_owner;
         $user->email = $request->email;
         $user->status = $request->status;
+        $user->notes = $request->notes;
         $user->save();
 
         $userAddress = UserAddress::query()->where('user_id', $request->id)->first();

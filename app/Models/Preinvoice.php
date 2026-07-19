@@ -143,17 +143,16 @@ class Preinvoice extends Model {
         }
 
 
-        if (isset($this->workshop) && $this->workshop->status == 1 && isset($this->workshop->items) && count($this->workshop->items) > 0) {
+        if (isset($this->workshop) && $this->workshop->status == 1 && !$this->workshop->has_no_fire_extinguisher_part && isset($this->workshop->items) && count($this->workshop->items) > 0) {
             $status = new \stdClass();
             $status->title = 'ثبت داغی شده است';
             $status->class = 'text-nowrap mb-2 label label-md font-weight-bold label-light-success label-inline';
             $workshopStatus[] = $status;
         }
 
-
-        if (isset($this->workshop) && $this->workshop->status == 1 && isset($this->workshop->items) && count($this->workshop->items) < 0) {
+        if (isset($this->workshop) && $this->workshop->status == 1 && $this->workshop->has_no_fire_extinguisher_part) {
             $status = new \stdClass();
-            $status->title = 'بدون داغی می باشد';
+            $status->title = 'شارژ شد و داغی ندارد';
             $status->class = 'text-nowrap mb-2 label label-md font-weight-bold label-light-warning label-inline';
             $workshopStatus[] = $status;
         }

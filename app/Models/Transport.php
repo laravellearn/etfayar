@@ -142,6 +142,22 @@ class Transport extends Model {
         return $v->format('Y/n/j');
     }
 
+    public function getPersianCollectTimeAttribute() {
+        if (is_null($this->collect_time)) {
+            return null;
+        }
+        $v = new Verta($this->collect_time);
+        return $v->format('Y/n/j H:i');
+    }
+
+    public function getPersianDeliveryTimeAttribute() {
+        if (is_null($this->delivery_time)) {
+            return null;
+        }
+        $v = new Verta($this->delivery_time);
+        return $v->format('Y/n/j H:i');
+    }
+
     /**
      * متن نمایشیِ دو بازه‌ی زمانیِ مراجعه، مثلا:
      * «از ساعت 09:00 تا ساعت 12:00 و از ساعت 14:00 تا ساعت 17:00»

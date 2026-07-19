@@ -245,7 +245,7 @@
                                                     <i class="la la-mobile-phone"></i>
                                                 </span>
                                                             </div>
-                                                            <input type="text" name="mobile" id="mobile"
+                                                            <input type="text" name="group_mobile[{{ $loop->index }}][mobile]"
                                                                    value="{{$mobile->mobile}}" class="form-control"
                                                                    placeholder="@lang('user.mobile')">
                                                         </div>
@@ -257,7 +257,7 @@
                                                     <i class="la la-phone"></i>
                                                 </span>
                                                             </div>
-                                                            <input type="text" name="telephone" id="telephone"
+                                                            <input type="text" name="group_mobile[{{ $loop->index }}][telephone]"
                                                                    value="{{$mobile->telephone}}" class="form-control"
                                                                    placeholder="@lang('user.mobile')">
                                                         </div>
@@ -269,7 +269,7 @@
                                                     <i class="la la-user"></i>
                                                 </span>
                                                             </div>
-                                                            <input type="text" name="mobile_owner" id="mobile_owner"
+                                                            <input type="text" name="group_mobile[{{ $loop->index }}][mobile_owner]"
                                                                    value="{{$mobile->mobile_owner}}"
                                                                    class="form-control"
                                                                    placeholder="@lang('user.mobile_owner')">
@@ -291,7 +291,7 @@
                                                     <i class="la la-mobile-phone"></i>
                                                 </span>
                                                         </div>
-                                                        <input type="text" name="mobile" id="mobile"
+                                                        <input type="text" name="group_mobile[0][mobile]"
                                                                class="form-control" placeholder="@lang('user.mobile')">
                                                     </div>
                                                 </div>
@@ -302,7 +302,7 @@
                                                     <i class="la la-phone"></i>
                                                 </span>
                                                         </div>
-                                                        <input type="text" name="telephone" id="telephone"
+                                                        <input type="text" name="group_mobile[0][telephone]"
                                                                class="form-control"
                                                                placeholder="@lang('user.telephone')">
                                                     </div>
@@ -314,7 +314,7 @@
                                                     <i class="la la-user"></i>
                                                 </span>
                                                         </div>
-                                                        <input type="text" name="mobile_owner" id="mobile_owner"
+                                                        <input type="text" name="group_mobile[0][mobile_owner]"
 
                                                                class="form-control"
                                                                placeholder="@lang('user.mobile_owner')">
@@ -522,6 +522,12 @@
                                     @endforeach
                                 </div>
                             </div>
+
+                            @php($title=__("user.notes"))
+                            @php($value=$user->notes??'')
+                            <x-InputText :title="$title" name="notes" id="notes" :value="$value"
+                                         caption="" type="text" icon="bx bx-text">
+                            </x-InputText>
 
                             @php($status=$user->status)
                             @include('partials.status_input')

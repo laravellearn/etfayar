@@ -228,6 +228,13 @@
                         </div>
                     </div>
 
+                    <div class="form-group row">
+                        <label class="col-3">@lang("transport.collect_time")</label>
+                        <div class="col-9">
+                            <div>{{$single->persianCollectTime??'-'}}</div>
+                        </div>
+                    </div>
+
 
                 </div>
             </div>
@@ -270,6 +277,13 @@
                         <div class="col-9">
                             <div
                                 class="{{$single->transportDeliveryStatusValue->class}}">{{$single->transportDeliveryStatusValue->title}}</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-3">@lang("transport.delivery_time")</label>
+                        <div class="col-9">
+                            <div>{{$single->persianDeliveryTime??'-'}}</div>
                         </div>
                     </div>
 

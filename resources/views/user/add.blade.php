@@ -341,6 +341,12 @@
                         </div>
                     </div>
 
+                    @php($title=__("user.notes"))
+                    @php($value=old('notes'))
+                    <x-InputText :title="$title" name="notes" id="notes" :value="$value"
+                                 caption="" type="text" icon="bx bx-text">
+                    </x-InputText>
+
                     @php($status=1)
                     @include('partials.status_input')
                 </div>

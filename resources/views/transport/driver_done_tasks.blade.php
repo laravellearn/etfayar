@@ -56,6 +56,7 @@
                                                 <th>@lang('transport.customer_name')</th>
                                                 <th>@lang('user.address')</th>
                                                 <th>@lang('common.created_at')</th>
+                                                <th>@lang('transport.collect_time')</th>
                                                 <th>@lang('transport.status_charge_receipts')</th>
                                                 <th>@lang('common.actions')</th>
                                             </tr>
@@ -68,6 +69,7 @@
                                                     <td>{{$item->preinvoice->request->user->full_name??''}}</td>
                                                     <td>{{$item->preinvoice->request->user->address->toStringAddress??''}}</td>
                                                     <td>{{$item->persianDateTime}}</td>
+                                                    <td nowrap>{{$item->persianCollectTime??'-'}}</td>
                                                     <td>
                                                         <div
                                                             class="{{$item->transportChargeReceiptStatusValue['class']}}">{{$item->transportChargeReceiptStatusValue['title']}}
@@ -106,6 +108,7 @@
                                                 <th>@lang('transport.customer_name')</th>
                                                 <th>@lang('user.address')</th>
                                                 <th>@lang('common.created_at')</th>
+                                                <th>@lang('transport.delivery_time')</th>
                                                 <th>@lang('payment.add')</th>
                                                 <th>@lang('common.actions')</th>
                                             </tr>
@@ -118,6 +121,7 @@
                                                     <td>{{$item->preinvoice->request->user->full_name??''}}</td>
                                                     <td>{{$item->preinvoice->request->user->address->toStringAddress??''}}</td>
                                                     <td>{{$item->persianDateTime}}</td>
+                                                    <td nowrap>{{$item->persianDeliveryTime??'-'}}</td>
                                                     <td>
                                                         <x-FormButton permission="Add Payment"
                                                                       url="{{route('payment.create',$item->preinvoice->id)}}"

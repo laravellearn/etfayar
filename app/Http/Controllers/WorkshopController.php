@@ -63,6 +63,7 @@ class WorkshopController extends Controller {
         // توضیحات و وضعیت همیشه ذخیره بشه، حتی اگه به هر دلیلی هیچ قطعه‌ای انتخاب نشده باشه.
         // تاریخ ثبت (created_at) به‌صورت خودکار توسط خود لاراول برای رکورد جدید ثبت می‌شه.
         $workshop->description = $request->description;
+        $workshop->has_no_fire_extinguisher_part = $request->has('has_no_fire_extinguisher_part');
         $workshop->status = 1;
         $workshop->save();
 

@@ -110,6 +110,21 @@
                         </div>
                     </div>
 
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <label>@lang('workshop.has_no_fire_extinguisher_part')</label>
+                        </div>
+                        <div class="col-md-9">
+                            <span class="switch switch-icon">
+                                <label>
+                                    <input type="checkbox" name="has_no_fire_extinguisher_part" value="1"
+                                           {{ !empty($workshop->has_no_fire_extinguisher_part) ? 'checked' : '' }}>
+                                    <span></span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+
                     @php($title=__("workshop.description"))
                     @php($value=$workshop->description??'')
                     <x-InputText :title="$title" name="description" id="description" :value="$value"

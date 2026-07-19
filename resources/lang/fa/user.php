@@ -44,6 +44,7 @@ return [
     'roles' => 'نقش ها',
     'customer_code' => 'شماره مشتری',
     'created_at' => 'تاریخ ثبت مشتری',
+    'notes' => 'توضیحات / خصوصیات مشتری',
     'add_role' => 'افزودن نقش جدید',
     'edit_role' => 'ویرایش نقش',
     'permissions' => 'مجوز ها',

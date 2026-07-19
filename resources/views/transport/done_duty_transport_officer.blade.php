@@ -56,6 +56,7 @@
                                                 <th>@lang('preinvoice.customer')</th>
                                                 <th>@lang('user.address')</th>
                                                 <th>@lang('common.created_at')</th>
+                                                <th>@lang('transport.collect_time')</th>
                                                 <th>@lang('user.status')</th>
                                                 <th>@lang('common.actions')</th>
                                             </tr>
@@ -68,6 +69,7 @@
                                                     <td>{{$item->preinvoice->request->user->full_name??''}}</td>
                                                     <td>{{$item->preinvoice->request->user->address->toStringAddress??''}}</td>
                                                     <td>{{$item->persianDateTime}}</td>
+                                                    <td nowrap>{{$item->persianCollectTime??'-'}}</td>
                                                     <td>
                                                         <div
                                                             class="{{$item->transportStatusValue->class??''}}">{{$item->transportStatusValue->title??''}}</div>
@@ -131,6 +133,7 @@
                                                 <th>@lang('preinvoice.customer')</th>
                                                 <th>@lang('user.address')</th>
                                                 <th>@lang('common.created_at')</th>
+                                                <th>@lang('transport.delivery_time')</th>
                                                 <th>@lang('user.status')</th>
                                                 <th>@lang('common.actions')</th>
                                             </tr>
@@ -143,6 +146,7 @@
                                                     <td>{{$item->preinvoice->request->user->full_name??''}}</td>
                                                     <td>{{$item->preinvoice->request->user->address->toStringAddress??''}}</td>
                                                     <td>{{$item->persianDateTime}}</td>
+                                                    <td nowrap>{{$item->persianDeliveryTime??'-'}}</td>
                                                     <td>
                                                         <div
                                                             class="{{$item->transportStatusValue->class??''}}">{{$item->transportStatusValue->title??''}}</div>
