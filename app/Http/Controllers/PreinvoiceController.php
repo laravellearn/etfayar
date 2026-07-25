@@ -19,6 +19,7 @@ use App\Services\Invoice\PreInvoiceStore;
 use App\Services\Invoice\TransportStore;
 use App\Services\Invoice\WorkshopItemStore;
 use App\Services\Invoice\WorkshopStore;
+use App\Services\Notification\SystemNotifier;
 use App\Services\Notification\SmsSender;
 use App\Services\Pdf\CreatePdf;
 use App\Services\uploader\Uploader;
@@ -71,7 +72,7 @@ class PreinvoiceController extends Controller {
         /* if ($request->status == 'financial') {
              $this->change_to_invoice($single->id);
          }*/
-        return redirect()->route('preinvoices');
+        return redirect()->route('preinvoices')->with('status', 'با موفقیت ثبت شد');
     }
 
     public function show($id) {
@@ -158,7 +159,7 @@ class PreinvoiceController extends Controller {
              return redirect()->route('preinvoice.change_to_factor', $single->id);
          }*/
 
-        return redirect()->route('preinvoices');
+        return redirect()->route('preinvoices')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function destroy($id) {
@@ -188,6 +189,16 @@ class PreinvoiceController extends Controller {
             Setting::setValue('invoice_counter', $invoice_counter + 1);
             $single->invoice_counter = $invoice_counter + 1;
             $single->save();
+
+            $expertId = $single->request->expert_id ?? null;
+            $customerName = $single->request->user->full_name ?? '';
+            SystemNotifier::toAdmin(
+                $expertId,
+                'صدور فاکتور',
+                "فاکتور مشتری {$customerName} صادر شد.",
+                route('invoices')
+            );
+
             return redirect()->route('invoices');
         } else {
             $title = __('preinvoice.discrepancy_items');
@@ -243,6 +254,15 @@ class PreinvoiceController extends Controller {
         $single = Preinvoice::where('id', $id)->first();
         $single->status = 'financial';
         $single->save();
+
+        $customerName = $single->request->user->full_name ?? '';
+        SystemNotifier::toRoles(
+            ['financial manager', 'Chief Financial Officer', 'Accountants', 'Accounting assistant'],
+            'پیش‌فاکتور در انتظار تایید',
+            "پیش‌فاکتور مشتری {$customerName} منتظر تایید و تبدیل به فاکتور است.",
+            route('invoice.pending')
+        );
+
         return redirect()->route('preinvoices');
     }
 

@@ -107,9 +107,48 @@ class NotificationController extends Controller {
 
         }
 
+        // نوتیفیکیشن‌هایی که مستقیم برای همین ادمین ارسال شدن (نه بر اساس نقش)
+        $directNotifs = Notification::query()
+            ->where('admin_id', auth('admin')->id())
+            ->where('status', 1)
+            ->orderByDesc('created_at')
+            ->get();
+        foreach ($directNotifs as $notif) {
+            if (!in_array($notif, $list)) {
+                $list[] = $notif;
+            }
+        }
+
+        usort($list, function ($a, $b) {
+            return $b->created_at <=> $a->created_at;
+        });
+
         //dd($notifications);
         $title = __('notification.received');
         return view('notification.list_received', compact('list', 'title'));
+    }
+
+    /**
+     * علامت‌گذاری یک نوتیفیکیشن به‌عنوان خوانده‌شده برای ادمین جاری، و انتقال
+     * به لینک مرتبط با همون نوتیفیکیشن (مثلاً همون فاکتور/ترابری/داغی).
+     * اگه لینکی ثبت نشده باشه، به صفحه‌ی جزئیات خود نوتیفیکیشن می‌ره.
+     */
+    public function open($id) {
+        $single = Notification::query()->where('id', $id)->firstOrFail();
+
+        $adminNotification = AdminNotification::query()
+            ->where('admin_id', auth('admin')->id())
+            ->where('notification_id', $single->id)
+            ->firstOrCreate();
+        $adminNotification->admin_id = auth('admin')->id();
+        $adminNotification->notification_id = $single->id;
+        $adminNotification->save();
+
+        if (!empty($single->url)) {
+            return redirect($single->url);
+        }
+
+        return redirect()->route('notification.show', $single->id);
     }
 
 }

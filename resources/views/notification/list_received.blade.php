@@ -30,6 +30,7 @@
                                 <th>@lang('notification.id')</th>
                                 <th>@lang('notification.sender')</th>
                                 <th>@lang('notification.title')</th>
+                                <th>@lang('notification.body')</th>
                                 <th>@lang('common.status')</th>
                                 <th>@lang('common.created_at')</th>
                                 <th>@lang('common.actions')</th>
@@ -43,14 +44,15 @@
                                     <td nowrap>{{$item->id}}</td>
                                     <td nowrap>{{$item->sender->full_name??''}}</td>
                                     <td nowrap>{{$item->title??''}}</td>
+                                    <td>{{$item->body??''}}</td>
                                     <td>
                                         <div class="{{$item->statusValue->class}}">{{$item->statusValue->title}}</div>
                                     </td>
                                     <td nowrap>{{$item->persianDateTime}}</td>
                                     <td nowrap>
 
-                                        <x-FormButton permission="Show Notification"
-                                                      url="{{route('notification.show',$item->id)}}"
+                                        <x-FormButton permission="Access Received Notifications"
+                                                      url="{{route('notification.open',$item->id)}}"
                                                       :icon="__('icon.show_icon')"
                                                       :title="__('common.show')"
                                                       click="null">

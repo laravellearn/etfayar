@@ -8,3 +8,6 @@ php artisan preinvoices:backfill-snapshots              # اجرای واقعی
 php artisan transports:backfill-visit-time
 
 php artisan preinvoices:backfill-snapshots
+
+
+php artisan roles:assign-all-to-chief-manager

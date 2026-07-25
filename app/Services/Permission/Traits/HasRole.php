@@ -44,4 +44,8 @@ trait HasRole {
         return $this->roles->contains('title', $role);
     }
 
+    public function hasAnyRole(array $roles) {
+        return $this->roles->pluck('title')->intersect($roles)->isNotEmpty();
+    }
+
 }

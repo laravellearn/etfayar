@@ -49,7 +49,14 @@
                         </span><span class="menu-text">{{$menu->title}}</span></a>
                         </li>
                     @elseif($menu->type=='menu' && count($menu->childs)>0 &&  auth('admin')->user()->hasPermissionAsTitle($menu->permission_title))
-                        <li class="menu-item menu-item-submenu menu-item-open" aria-haspopup="true"
+                        @php
+                            // به‌صورت پیش‌فرض همه‌ی زیرمنوها بسته باشن؛ فقط اگه صفحه‌ی
+                            // فعلی داخل همین زیرمجموعه باشه، به‌صورت خودکار باز بمونه.
+                            $isActiveParentMenu = collect($menu->childs)->contains(function ($subMenu) {
+                                return \Illuminate\Support\Facades\Route::currentRouteName() == $subMenu->url;
+                            });
+                        @endphp
+                        <li class="menu-item menu-item-submenu {{ $isActiveParentMenu ? 'menu-item-open' : '' }}" aria-haspopup="true"
                             data-menu-toggle="hover">
                             <a href="javascript:;" class="menu-link menu-toggle"><span class="svg-icon menu-icon">
                                     <!--begin::Svg Icon | path:assets/media/svg/icons/desgin/Bucket.svg-->

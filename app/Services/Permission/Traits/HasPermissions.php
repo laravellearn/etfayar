@@ -43,17 +43,25 @@ trait HasPermissions {
 
     public function hasPermission(Permission $permission) {
         //Log::info($permission);
+        // مدیر اصلی (Chief Manager) به همه‌ی مجوزها دسترسی داره، بدون نیاز به
+        // تخصیص تک‌تک مجوزها.
+        if ($this->hasRole('Chief Manager')) {
+            return true;
+        }
         return $this->hasPermissionThroughRole($permission) || $this->permissions->contains($permission);
 
     }
 
     public function hasPermissionAsTitle(string $permissionTitle) {
+        if ($this->hasRole('Chief Manager')) {
+            return true;
+        }
         $permission = Permission::query()->where('title', $permissionTitle)->first();
         if (!is_null($permission)) {
 
             return $this->hasPermission($permission);
         }
-
+        return false;
     }
 
 

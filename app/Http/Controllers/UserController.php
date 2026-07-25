@@ -198,7 +198,7 @@ public function store(Request $request): RedirectResponse
         DB::commit();
         SmsSender::user_registered($user);
 
-        return redirect()->route('user.show', $user->id);
+        return redirect()->route('user.show', $user->id)->with('status', 'با موفقیت ثبت شد');
     } catch (\Exception $e) {
         DB::rollback();
         Log::error($e->getMessage());
@@ -221,8 +221,9 @@ public function store(Request $request): RedirectResponse
         $cities = City::all();
         $services = Service::all();
         $acquaintances = Acquaintance::all();
+        $userSupports = \App\Models\UserSupport::with('admin')->where('user_id', $id)->orderByDesc('support_time')->get();
         $title = __('title.show_user');
-        return view('user.show', compact('title', 'user', 'roles', 'experts', 'provinces', 'cities', 'services', 'acquaintances'));
+        return view('user.show', compact('title', 'user', 'roles', 'experts', 'provinces', 'cities', 'services', 'acquaintances', 'userSupports'));
     }
 
     public function edit($id) {
@@ -303,7 +304,7 @@ public function update(Request $request): RedirectResponse
 
         DB::commit();
 
-        return redirect()->route('users');
+        return redirect()->route('users')->with('status', 'با موفقیت ویرایش شد');
     } catch (\Exception $e) {
         DB::rollback();
         Log::error($e->getMessage());

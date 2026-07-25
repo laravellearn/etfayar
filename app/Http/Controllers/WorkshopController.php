@@ -7,6 +7,7 @@ use App\Models\Preinvoice;
 use App\Models\PreinvoiceItem;
 use App\Models\Workshop;
 use App\Models\WorkshopItem;
+use App\Services\Notification\SystemNotifier;
 use Illuminate\Http\Request;
 
 class WorkshopController extends Controller {
@@ -67,7 +68,21 @@ class WorkshopController extends Controller {
         $workshop->status = 1;
         $workshop->save();
 
-        return redirect()->route('workshop.doneTasks');
+        $preinvoice = $workshop->preinvoice;
+        if (!is_null($preinvoice)) {
+            $expertId = $preinvoice->request->expert_id ?? null;
+            $customerName = $preinvoice->request->user->full_name ?? '';
+            SystemNotifier::toAdmin(
+                $expertId,
+                'ثبت داغی',
+                $workshop->has_no_fire_extinguisher_part
+                    ? "برای مشتری {$customerName} شارژ شد و داغی ندارد."
+                    : "داغی مشتری {$customerName} ثبت شد.",
+                route('preinvoices')
+            );
+        }
+
+        return redirect()->route('workshop.doneTasks')->with('status', 'با موفقیت ثبت شد');
 
     }
 

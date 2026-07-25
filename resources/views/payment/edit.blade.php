@@ -10,29 +10,23 @@
 
                         <x-Button permission="Access Invoices"
                                   :title="__('payment.title')"
-                                  url="{{route('payments',$invoice_id)}}">
+                                  url="{{route('payments',$single->invoice_id)}}">
                         </x-Button>
 
-
-                        @if (session('status'))
-                            <div class="alert alert-success" role="alert">
-                                {{ session('status') }}
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>
             <!--begin::Form-->
-            <form autocomplete="off" class="form" action="{{route('payment.store')}}" method="post"
+            <form autocomplete="off" class="form" action="{{route('payment.update')}}" method="post"
                   enctype="multipart/form-data">
                 <div class="card-body">
 
                     @csrf
-                    <input type="hidden" name="invoice_id" value="{{$invoice_id}}">
+                    <input type="hidden" name="id" value="{{$single->id}}">
 
                     @php($title=__("transport.payment_receipts"))
                     @php($caption='')
-                    @php($value=$single->upload_customer_payment_receipt)
+                    @php($value=$single->payment_receipt)
                     <x-InputRow :title="$title" name="upload_payment_receipt" id="upload_payment_receipt"
                                 :value="$value" :caption="$caption" type="file"
                                 icon="bx bx-tax">
@@ -49,7 +43,7 @@
                                 <option value="null" disabled selected hidden>انتخاب بانک...</option>
                                 @foreach($banks as $item)
                                     <option
-                                        {{old('bank_id')==$item->id?'selected':''}} value="{{$item->id}}">{{$item->name}}
+                                        {{$single->bank_id==$item->id?'selected':''}} value="{{$item->id}}">{{$item->name}}
                                     </option>
                                 @endforeach
                             </select>
@@ -58,40 +52,28 @@
 
                     @php($title=__("payment.price"))
                     @php($caption='')
-                    @php($value='')
+                    @php($value=$single->price)
                     <x-InputRow :title="$title" name="price" id="price" :value="$value" type="number" :min="0"
                                 :caption="$caption" icon="bx bx-money"/>
 
-                    @if(auth('admin')->user()->hasAnyRole(\App\Http\Controllers\PaymentController::FINANCIAL_ROLES))
+                    @if($canSetPaymentDate)
                         @php($title=__("payment.payment_date"))
                         @php($caption=__("payment.payment_date_hint"))
-                        @php($value='')
+                        @php($value=$single->persianPaymentDate)
                         <x-InputRow dir="ltr" :title="$title" name="payment_date" id="payment_date" :value="$value"
                                     :caption="$caption" type="text" icon="bx bx-calendar">
                         </x-InputRow>
+                    @else
+                        @php($title=__("payment.payment_date"))
+                        @php($value=$single->persianPaymentDate??'-')
+                        <x-InputRow :title="$title" name="payment_date_display" id="payment_date_display"
+                                    :value="$value" caption="" type="text" icon="bx bx-calendar" disabled="disabled">
+                        </x-InputRow>
                     @endif
-
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <label>@lang('payment.is_deposit') : </label>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="">
-                                    <label class="checkbox checkbox-lg">
-                                        <input type="checkbox" name="is_deposit">
-                                        <span></span>
-
-                                    </label>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
 
                     @php($title=__("payment.description"))
                     @php($caption=__(""))
-                    @php($value='')
+                    @php($value=$single->description)
                     <x-InputText :title="$title" name="description" id="description" :value="$value"
                                  :caption="$caption"
                                  type="text" icon="bx bx-text">

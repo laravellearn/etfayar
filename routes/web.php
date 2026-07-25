@@ -18,6 +18,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OfficeFormsController;
 use App\Http\Controllers\OfficeRequestsController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PreinvoiceController;
 use App\Http\Controllers\ProductController;
@@ -230,6 +231,10 @@ Route::prefix('admin')->group(function () {
     Route::get('/payment/agree_payment/{id}', [PaymentController::class, 'agree_payment'])->name('payment.agree_payment')->middleware('permission:Agree Payment');
     Route::get('/payment/disagree_payment/{id}', [PaymentController::class, 'disagree_payment'])->name('payment.disagree_payment')->middleware('permission:DisAgree Payment');
 
+    Route::get('/ledger', [LedgerController::class, 'index'])->name('ledger.index')->middleware('permission:Access Ledger');
+    Route::get('/ledger/pending', [LedgerController::class, 'pendingApprovals'])->name('ledger.pending')->middleware('permission:Access Ledger');
+    Route::get('/ledger/rejected', [LedgerController::class, 'rejected'])->name('ledger.rejected')->middleware('permission:Access Ledger');
+
     Route::get('/forms', [OfficeFormsController::class, 'index'])->name('forms')->middleware('permission:Access Office Forms');
     Route::get('/form/create/{form_id}', [OfficeFormsController::class, 'create'])->name('form.create')->middleware('permission:Add Office Form');
     Route::post('/form/store', [OfficeFormsController::class, 'store'])->name('form.store')->middleware('permission:Add Office Form');
@@ -271,6 +276,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/notification/update', [NotificationController::class, 'update'])->name('notification.update')->middleware('permission:Edit Notification');
     Route::get('/notification/delete/{id}', [NotificationController::class, 'destroy'])->name('notification.delete')->middleware('permission:Delete Notification');
     Route::get('/notification/received', [NotificationController::class, 'received'])->name('notification.received')->middleware('permission:Access Received Notifications');
+    Route::get('/notification/open/{id}', [NotificationController::class, 'open'])->name('notification.open')->middleware('permission:Access Received Notifications');
 
     Route::get('/user_supports/{user_id}', [UserSupportController::class, 'index'])->name('user_supports')->middleware('permission:Access User Supports');
     Route::get('/user_support/create/{user_id}', [UserSupportController::class, 'create'])->name('user_support.create')->middleware('permission:Add User Support');

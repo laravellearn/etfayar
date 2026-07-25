@@ -46,6 +46,8 @@
                                 <th>@lang('payment.description')</th>
                                 <th>@lang('payment.price')</th>
                                 <th>@lang('payment.is_deposit')</th>
+                                <th>@lang('payment.payment_date')</th>
+                                <th>@lang('common.status')</th>
                                 <th>@lang('common.created_at')</th>
                                 <th>@lang('common.actions')</th>
                             </tr>
@@ -70,9 +72,18 @@
                                     <td>
                                         <div class="{{ $item->deposit->class }}">{{ $item->deposit->title }}</div>
                                     </td>
+                                    <td nowrap>{{ $item->persianPaymentDate??'-' }}</td>
+                                    <td nowrap>
+                                        <div class="{{ $item->approvalStatusValue->class }}">{{ $item->approvalStatusValue->title }}</div>
+                                    </td>
                                     <td>{{ $item->persianDateTime }}</td>
                                     <td>
 
+                                        <x-FormButton permission="Edit Payment"
+                                                      url="{{route('payment.edit',$item->id)}}"
+                                                      :icon="__('icon.edit_icon')"
+                                                      :title="__('common.edit')"
+                                                      click="null"></x-FormButton>
 
                                         @if(!$item->is_agree)
                                             <x-FormButton permission="Agree Payment"

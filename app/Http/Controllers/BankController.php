@@ -25,7 +25,7 @@ class BankController extends Controller {
         $single->sheba = $request->sheba;
         $single->status = $request->status;
         $single->save();
-        return redirect()->route('banks');
+        return redirect()->route('banks')->with('status', 'با موفقیت ثبت شد');
     }
 
     public function show($id) {
@@ -46,7 +46,7 @@ class BankController extends Controller {
         $single->sheba = $request->sheba;
         $single->status = $request->status;
         $single->save();
-        return redirect()->route('banks');
+        return redirect()->route('banks')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function destroy($id) {

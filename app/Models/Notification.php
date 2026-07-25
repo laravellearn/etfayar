@@ -25,6 +25,10 @@ class Notification extends Model {
         return $this->belongsTo(Admin::class, 'sender_id');
     }
 
+    public function admin() {
+        return $this->belongsTo(Admin::class, 'admin_id');
+    }
+
     public function getStatusValueAttribute() {
         $status = new \stdClass();
         if ($this->status == 1) {

@@ -26,7 +26,7 @@ class AcquaintanceController extends Controller
         $single = new Acquaintance();
         $single->title = $request->title;
         $single->save();
-        return redirect()->route('acquaintances');
+        return redirect()->route('acquaintances')->with('status', 'با موفقیت ثبت شد');
     }
 
     public function show($id)
@@ -46,7 +46,7 @@ class AcquaintanceController extends Controller
         $single = Acquaintance::query()->find($request->id);
         $single->title = $request->title;
         $single->save();
-        return redirect()->route('acquaintances');
+        return redirect()->route('acquaintances')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function destroy($id)

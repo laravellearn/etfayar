@@ -74,7 +74,7 @@ class InformationController extends Controller {
         $information->type = $request->type;
         $information->header_type = $request->header_type;
         $information->save();
-        return redirect()->route('informations');
+        return redirect()->route('informations')->with('status', 'با موفقیت ثبت شد');
     }
 
     public function show($id) {
@@ -137,7 +137,7 @@ class InformationController extends Controller {
         $information->type = $request->type;
         $information->header_type = $request->header_type;
         $information->save();
-        return redirect()->route('informations');
+        return redirect()->route('informations')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function destroy($id) {

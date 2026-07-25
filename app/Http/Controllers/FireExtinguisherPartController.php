@@ -39,7 +39,7 @@ class FireExtinguisherPartController extends Controller {
         $single->price = $request->price;
         $single->status = $request->status;
         $single->save();
-        return redirect()->route('fireExtinguisherParts');
+        return redirect()->route('fireExtinguisherParts')->with('status', 'با موفقیت ثبت شد');
     }
 
     public function show($id) {
@@ -62,7 +62,7 @@ class FireExtinguisherPartController extends Controller {
         $single->price = $request->price;
         $single->status = $request->status;
         $single->save();
-        return redirect()->route('fireExtinguisherParts');
+        return redirect()->route('fireExtinguisherParts')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function destroy($id) {

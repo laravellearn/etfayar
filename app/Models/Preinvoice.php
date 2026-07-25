@@ -21,6 +21,10 @@ class Preinvoice extends Model {
         return $this->hasMany(PreinvoiceItem::class);
     }
 
+    public function payments() {
+        return $this->hasMany(Payment::class, 'invoice_id');
+    }
+
 
     public function transport() {
         return $this->hasOne(Transport::class);

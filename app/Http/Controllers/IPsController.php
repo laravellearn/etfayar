@@ -25,7 +25,7 @@ class IPsController extends Controller {
         $single->description = $request->description;
         $single->status = $request->status;
         $single->save();
-        return redirect()->route('ips');
+        return redirect()->route('ips')->with('status', 'با موفقیت ثبت شد');
 
     }
 
@@ -45,7 +45,7 @@ class IPsController extends Controller {
         $single->description = $request->description;
         $single->status = $request->status;
         $single->save();
-        return redirect()->route('ips');
+        return redirect()->route('ips')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function destroy($id) {
@@ -70,7 +70,7 @@ class IPsController extends Controller {
         } else {
             Setting::setValue('is_active_ip_protection', 'false');
         }
-        return redirect()->route('ip.settings');
+        return redirect()->route('ip.settings')->with('status', 'با موفقیت ثبت شد');
 
     }
 

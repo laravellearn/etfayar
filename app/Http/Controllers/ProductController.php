@@ -25,7 +25,7 @@ class ProductController extends Controller {
         $single->code = $this->get_max_code() + 10;
         $single->type = $request->type;
         $single->save();
-        return redirect()->route('products');
+        return redirect()->route('products')->with('status', 'با موفقیت ثبت شد');
     }
 
     private function get_max_code() {
@@ -50,7 +50,7 @@ class ProductController extends Controller {
         $single->quantity = $request->quantity;
 
         $single->save();
-        return redirect()->route('products');
+        return redirect()->route('products')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function destroy($id) {

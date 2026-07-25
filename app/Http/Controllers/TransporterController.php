@@ -7,6 +7,7 @@ use App\Models\Role;
 use App\Models\Transport;
 use App\Models\UserRequest;
 use App\Models\Workshop;
+use App\Services\Notification\SystemNotifier;
 use App\Services\uploader\Uploader;
 use Carbon\Carbon;
 use Hekmatinasser\Verta\Facades\Verta;
@@ -107,7 +108,26 @@ class TransporterController extends Controller {
         }
 
         $single->save();
-        return redirect()->route('transports');
+
+        $customerName = $single->preinvoice->request->user->full_name ?? '';
+        if ($request->status == 'collect' && !is_null($request->collect_driver_id)) {
+            SystemNotifier::toAdmin(
+                $request->collect_driver_id,
+                'وظیفه جمع‌آوری جدید',
+                "یک وظیفه‌ی جمع‌آوری جدید برای مشتری {$customerName} به شما محول شد.",
+                route('transport.driversTasks')
+            );
+        }
+        if ($request->status == 'delivery' && !is_null($request->delivery_driver_id)) {
+            SystemNotifier::toAdmin(
+                $request->delivery_driver_id,
+                'وظیفه تحویل جدید',
+                "یک وظیفه‌ی تحویل جدید برای مشتری {$customerName} به شما محول شد.",
+                route('transport.driversTasks')
+            );
+        }
+
+        return redirect()->route('transports')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function driversTasks() {
@@ -167,6 +187,8 @@ class TransporterController extends Controller {
 
         if (isset($request->is_cancel) && $request->is_cancel == 'on') {
             $single->cancel_time = Carbon::now()->toDateTimeString();
+            $single->collect_status = 'cancel';
+            $single->status = 'cancel';
         } else {
             if (!is_null($request->charge_receipt_file)) {
                 $imagePath = $this->uploader->upload($request->charge_receipt_file);
@@ -182,10 +204,19 @@ class TransporterController extends Controller {
             }
             $single->cancel_time = null;
             $single->collect_time = Carbon::now()->toDateTimeString();
+            $single->collect_status = 'collected';
+
+            $customerName = $single->preinvoice->request->user->full_name ?? '';
+            SystemNotifier::toRoles(
+                ['Transportation Supervisor'],
+                'جمع‌آوری توسط راننده انجام شد',
+                "جمع‌آوری مربوط به مشتری {$customerName} توسط راننده انجام شد.",
+                route('transports')
+            );
         }
 
         $single->save();
-        return redirect()->route('transport.driversTasks');
+        return redirect()->route('transport.driversTasks')->with('status', 'با موفقیت ویرایش شد');
     }
 
     /*    public function viewCustomerRequest($id) {
@@ -212,7 +243,18 @@ class TransporterController extends Controller {
         $transport = Transport::query()->where('id', '=', $request->id)->first();
         $transport->collect_driver_id = $request->collect_driver_id;
         $transport->save();
-        return redirect()->route('transports');
+
+        if (!is_null($request->collect_driver_id)) {
+            $customerName = $transport->preinvoice->request->user->full_name ?? '';
+            SystemNotifier::toAdmin(
+                $request->collect_driver_id,
+                'وظیفه جمع‌آوری جدید',
+                "یک وظیفه‌ی جمع‌آوری جدید برای مشتری {$customerName} به شما محول شد.",
+                route('transport.driversTasks')
+            );
+        }
+
+        return redirect()->route('transports')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function set_delivery_status($id) {
@@ -227,7 +269,18 @@ class TransporterController extends Controller {
         $transport = Transport::query()->where('id', '=', $request->id)->first();
         $transport->delivery_driver_id = $request->delivery_driver_id;
         $transport->save();
-        return redirect()->route('transports');
+
+        if (!is_null($request->delivery_driver_id)) {
+            $customerName = $transport->preinvoice->request->user->full_name ?? '';
+            SystemNotifier::toAdmin(
+                $request->delivery_driver_id,
+                'وظیفه تحویل جدید',
+                "یک وظیفه‌ی تحویل جدید برای مشتری {$customerName} به شما محول شد.",
+                route('transport.driversTasks')
+            );
+        }
+
+        return redirect()->route('transports')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function done_task($id) {
@@ -241,9 +294,28 @@ class TransporterController extends Controller {
         if (isset($request->is_done) && $request->is_done == 'on') {
             $single->delivery_description = $request->delivery_description;
             $single->delivery_time = Carbon::now()->toDateTimeString();
+            $single->delivery_status = 'delivered';
+            $single->status = 'done';
             $single->save();
+
+            $customerName = $single->preinvoice->request->user->full_name ?? '';
+
+            SystemNotifier::toRoles(
+                ['Transportation Supervisor'],
+                'تحویل توسط راننده انجام شد',
+                "تحویل به مشتری {$customerName} توسط راننده انجام شد.",
+                route('transports')
+            );
+
+            $expertId = $single->preinvoice->request->expert_id ?? null;
+            SystemNotifier::toAdmin(
+                $expertId,
+                'تحویل به مشتری',
+                "کالای مشتری {$customerName} تحویل داده شد.",
+                route('preinvoices')
+            );
         }
-        return redirect()->route('transport.driversTasks');
+        return redirect()->route('transport.driversTasks')->with('status', 'با موفقیت ویرایش شد');
     }
 
 

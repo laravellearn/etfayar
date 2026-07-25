@@ -399,6 +399,63 @@
             <!--end::Form-->
         </div>
         <!--end::Card-->
+
+        <div class="card card-custom gutter-b">
+            <div class="card-header">
+                <div class="card-title">
+                    <h3 class="card-label">پشتیبانی‌های مشتری</h3>
+                </div>
+                <div class="card-toolbar">
+                    <x-FormButton permission="Add User Support"
+                                  url="{{route('user_support.create',$user->id)}}"
+                                  :icon="__('icon.add_icon')"
+                                  :title="__('user_support.add')"
+                                  click="null">
+                    </x-FormButton>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-head-custom table-vertical-center">
+                        <thead>
+                        <tr>
+                            <th>@lang('user_support.support_time')</th>
+                            <th>@lang('user_support.create_description')</th>
+                            <th>@lang('common.status')</th>
+                            <th>@lang('user_support.done_time')</th>
+                            <th>@lang('user_support.done_description')</th>
+                            <th>@lang('common.actions')</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @forelse($userSupports as $item)
+                            <tr>
+                                <td nowrap>{{$item->persianSupportTime}}</td>
+                                <td>{{$item->create_description}}</td>
+                                <td nowrap>
+                                    <div class="{{$item->statusValue->class}}">{{$item->statusValue->title}}</div>
+                                </td>
+                                <td nowrap>{{$item->persianDoneTime??'-'}}</td>
+                                <td>{{$item->done_description}}</td>
+                                <td nowrap>
+                                    <x-FormButton permission="Edit User Support"
+                                                  url="{{route('user_support.edit',$item->id)}}"
+                                                  :icon="__('icon.edit_icon')"
+                                                  :title="__('common.edit')"
+                                                  click="null">
+                                    </x-FormButton>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">پشتیبانی‌ای برای این مشتری ثبت نشده است.</td>
+                            </tr>
+                        @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>

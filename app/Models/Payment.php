@@ -26,6 +26,29 @@ class Payment extends Model {
     }
 
 
+    public function getPersianPaymentDateAttribute() {
+        if (is_null($this->payment_date)) {
+            return null;
+        }
+        $v = new \Hekmatinasser\Verta\Verta($this->payment_date);
+        return $v->format('%d %B %Y');
+    }
+
+    public function getApprovalStatusValueAttribute() {
+        $status = new \stdClass();
+        if ($this->status == 1) {
+            $status->title = 'تایید شده';
+            $status->class = 'label label-lg font-weight-bold label-light-success label-inline';
+        } else if ($this->status == 2) {
+            $status->title = 'رد شده';
+            $status->class = 'label label-lg font-weight-bold label-light-danger label-inline';
+        } else {
+            $status->title = 'در انتظار تایید مالی';
+            $status->class = 'label label-lg font-weight-bold label-light-warning label-inline';
+        }
+        return $status;
+    }
+
     public function getDepositAttribute() {
         $status = new \stdClass();
         if ($this->is_deposit == true) {

@@ -1,0 +1,23 @@
+<?php
+return [
+    'title' => 'گزارش بدهکاران و بستانکاران',
+    'row' => 'ردیف',
+    'customer' => 'نام مشتری',
+    'bank_account' => 'شماره حساب',
+    'invoice_date' => 'تاریخ صدور فاکتور',
+    'debtor' => 'بدهکار',
+    'creditor' => 'بستانکار',
+    'remaining' => 'باقیمانده',
+    'status' => 'وضعیت',
+    'status_debtor' => 'بدهکار',
+    'status_creditor' => 'بستانکار',
+    'status_settled' => 'تسویه شده',
+    'status_all' => 'همه',
+    'filter' => 'فیلتر وضعیت',
+    'search' => 'جستجو (نام مشتری یا کد فاکتور)',
+    'totals' => 'جمع کل',
+    'pending_approvals' => 'پرداخت‌های در انتظار تایید مالی',
+    'rejected' => 'پرداخت‌های رد شده',
+    'submitted_by' => 'ثبت‌کننده',
+    'no_records' => 'رکوردی یافت نشد.',
+];

@@ -22,7 +22,7 @@ class DescriptionController extends Controller {
         $description = new Description();
         $description->description = $request->description;
         $description->save();
-        return redirect()->route('descriptions');
+        return redirect()->route('descriptions')->with('status', 'با موفقیت ثبت شد');
     }
 
     public function show($id) {
@@ -39,7 +39,7 @@ class DescriptionController extends Controller {
         $description = Description::query()->find($request->id);
         $description->description = $request->description;
         $description->save();
-        return redirect()->route('descriptions');
+        return redirect()->route('descriptions')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function destroy($id) {

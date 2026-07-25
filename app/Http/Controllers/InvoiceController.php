@@ -110,7 +110,7 @@ class InvoiceController extends Controller {
             WorkshopItemStore::store($request->workshop_items, $workshop);
         }
 
-        return redirect()->route('invoices');
+        return redirect()->route('invoices')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function show($id) {

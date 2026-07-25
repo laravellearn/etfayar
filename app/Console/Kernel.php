@@ -37,6 +37,9 @@ class Kernel extends ConsoleKernel {
 
 
         })->everyMinute();
+
+        // آلارم داخل‌برنامه‌ای (نوتیفیکیشن) وقتی تاریخ پشتیبانی یک مشتری فرا می‌رسد
+        $schedule->command('user-supports:check-alarms')->dailyAt('08:00');
     }
 
     /**

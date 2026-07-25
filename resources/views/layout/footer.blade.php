@@ -150,5 +150,40 @@
     });
 })();
 </script>
+
+{{-- نمایش سراسری پیغام‌های موفقیت/خطا با toastr روی همه‌ی صفحات --}}
+@if(session('status') || session('success') || session('error') || (isset($errors) && $errors->any()))
+<script>
+    if (typeof toastr !== 'undefined') {
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-top-left",
+            "rtl": true,
+            "timeOut": "5000",
+            "newestOnTop": true
+        };
+
+        @if(session('status'))
+            toastr.success(@json(session('status')));
+        @endif
+
+        @if(session('success'))
+            toastr.success(@json(session('success')));
+        @endif
+
+        @if(session('error'))
+            toastr.error(@json(session('error')));
+        @endif
+
+        @if(isset($errors) && $errors->any())
+            @foreach($errors->all() as $validationError)
+                toastr.error(@json($validationError));
+            @endforeach
+        @endif
+    }
+</script>
+@endif
+
 @stack("addUserForm")
 @stack("addProductForm")

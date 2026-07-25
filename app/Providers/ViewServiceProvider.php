@@ -77,6 +77,23 @@ class ViewServiceProvider extends ServiceProvider {
 
             }
 
+            // نوتیفیکیشن‌هایی که مستقیم برای همین ادمین ارسال شدن (نه بر اساس نقش) -
+            // مثلاً «صدور فاکتور» برای کارشناسِ همون مشتری، یا «وظیفه جدید» برای یک راننده‌ی خاص.
+            $directNotifs = Notification::query()
+                ->where('admin_id', auth('admin')->id())
+                ->where('status', 1)
+                ->get();
+            foreach ($directNotifs as $notif) {
+                $is_read_notification = AdminNotification::getRead($notif->id, auth('admin')->id());
+                if (!in_array($notif, $notifications) && is_null($is_read_notification)) {
+                    $notifications[] = $notif;
+                }
+            }
+
+            usort($notifications, function ($a, $b) {
+                return $b->created_at <=> $a->created_at;
+            });
+
             $date = Verta::now()->format('%d %B %Y');
             $view->with('requests', $officeRequests);
             $view->with('notifications', $notifications);

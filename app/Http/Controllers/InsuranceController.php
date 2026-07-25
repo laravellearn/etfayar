@@ -74,7 +74,7 @@ class InsuranceController extends Controller {
             }
         }
 
-        return redirect()->route('insurances');
+        return redirect()->route('insurances')->with('status', 'با موفقیت ثبت شد');
     }
 
 
@@ -115,7 +115,7 @@ class InsuranceController extends Controller {
                 $insuranceItem->save();
             }
         }
-        return redirect()->route('insurances');
+        return redirect()->route('insurances')->with('status', 'با موفقیت ویرایش شد');
     }
 
     public function destroy($id) {
