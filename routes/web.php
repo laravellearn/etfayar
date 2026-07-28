@@ -318,3 +318,28 @@ Route::get('/user/{id}/requests', [UserController::class, 'requests'])->name('us
 Route::get('/user/{id}/preinvoices', [UserController::class, 'preinvoices'])->name('user.preinvoices');
 });
 
+
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+
+Route::get('/run-system-commands-1', function () {
+
+    Artisan::call('migrate');
+    Artisan::call('preinvoices:backfill-snapshots');
+    Artisan::call('transports:backfill-visit-time');
+    Artisan::call('preinvoices:backfill-snapshots');
+    Artisan::call('roles:assign-all-to-chief-manager');
+    Artisan::call('optimize');
+
+    DB::table('menus')
+        ->whereIn('url', [
+            'ledger.rejected',
+            'ledger.pending',
+            'ledger.index',
+        ])
+        ->update([
+            'parent_id' => 7
+        ]);
+
+    return nl2br(Artisan::output() . "\n\nتمام دستورات با موفقیت اجرا شدند.");
+});

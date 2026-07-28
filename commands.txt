@@ -11,3 +11,8 @@ php artisan preinvoices:backfill-snapshots
 
 
 php artisan roles:assign-all-to-chief-manager
+
+
+در جدول menus
+فیلد parent_id
+برای بدهکاران که شامل سه فیلد هست برابر با 7 قرار بدم

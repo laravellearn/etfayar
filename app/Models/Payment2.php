@@ -12,17 +12,9 @@ class Payment extends Model {
     use SoftDeletes;
     use PersianDate;
 
-    /**
-     * رابطه به Preinvoice.
-     *
-     * ⚠️ مشکل اصلی: ستون در جدول payments اسمش invoice_id است نه preinvoice_id
-     * Laravel به صورت خودکار از نام متد حدس می‌زند (preinvoice_id) که اشتباه است.
-     * باید foreign key را صریح تعریف کنیم.
-     */
+
     public function preinvoice() {
-        return $this->belongsTo(Preinvoice::class, 'invoice_id');
-        //                                           ^^^^^^^^^^^
-        //                       foreign key واقعی در جدول payments
+        return $this->belongsTo(Preinvoice::class);
     }
 
     public function admin() {
@@ -32,6 +24,7 @@ class Payment extends Model {
     public function bank() {
         return $this->belongsTo(Bank::class);
     }
+
 
     public function getPersianPaymentDateAttribute() {
         if (is_null($this->payment_date)) {
@@ -70,4 +63,6 @@ class Payment extends Model {
         }
         return $status;
     }
+
+
 }
