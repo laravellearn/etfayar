@@ -323,7 +323,9 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 
 Route::get('/run-system-commands-1', function () {
-
+    
+Artisan::call('optimize');
+    Artisan::call('storage:link');
     Artisan::call('migrate');
     Artisan::call('preinvoices:backfill-snapshots');
     Artisan::call('transports:backfill-visit-time');
