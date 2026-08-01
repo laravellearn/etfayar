@@ -28,7 +28,9 @@ class WorkshopController extends Controller {
         $title = __('workshop.add');
         $fireExtinguisherParts = FireExtinguisherPart::all();
         $workshop = Workshop::query()->with('items')->where('id', '=', $id)->firstOrNew();
-        $workshopItems = $workshop->items->toArray();
+        // باگ ۳: وقتی workshop جدید بود، items()->toArray() روی مدل ذخیره‌نشده خطا می‌داد.
+        // حل: بررسی exists قبل از فراخوانی toArray
+        $workshopItems = $workshop->exists ? $workshop->items->toArray() : [];
         return view('workshop.add', compact('title', 'fireExtinguisherParts', 'id', 'workshopItems', 'workshop'));
     }
 

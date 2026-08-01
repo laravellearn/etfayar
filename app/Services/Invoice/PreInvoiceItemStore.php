@@ -10,6 +10,9 @@ class PreInvoiceItemStore {
     public static function store($products, $preinvoice) {
         self::delete_old_items($preinvoice);
         if (!empty($products)) {
+            // باگ ۲: ترتیب ردیف‌های پیش‌فاکتور هنگام ویرایش تغییر می‌کرد.
+            // حل: sort_order صریح ذخیره می‌شود تا ترتیب اصلی حفظ شود.
+            $sortOrder = 1;
             foreach ($products as $product) {
 
                 $productsParts = explode('@', $product);
@@ -24,8 +27,8 @@ class PreInvoiceItemStore {
                 $preinvoceItem->title = $product->title;
                 $preinvoceItem->count = $product_count;
                 $preinvoceItem->price = $product_price;
+                $preinvoceItem->sort_order = $sortOrder++;
                 $preinvoceItem->save();
-                //ProductManager::update_product_quantity($product_id, $product_count);
             }
         }
     }

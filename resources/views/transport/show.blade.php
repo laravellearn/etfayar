@@ -78,9 +78,17 @@
                             مشتری</label>
                         <div class="col-lg-9 col-xl-6">
                             <div class="input-group input-group-lg">
+                                {{-- باگ ۴: لینک لوکیشن باید با https:// شروع شود تا در مرورگر به‌عنوان URL باز شود --}}
+                                @php
+                                    $rawLoc = $single->preinvoice->request->user->address->location ?? '';
+                                    $locationUrl = (!empty($rawLoc) && !str_starts_with($rawLoc, 'http'))
+                                        ? 'https://' . $rawLoc
+                                        : $rawLoc;
+                                @endphp
                                 <x-SimpleButton permission="Access User Location"
                                                 :title="__('transport.show_location')"
-                                                url="{{$single->preinvoice->request->user->address->location??''}}"></x-SimpleButton>
+                                                target="_blank"
+                                                url="{{$locationUrl}}"></x-SimpleButton>
 
                                 {{--<div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="la la-mobile"></i></span></div>

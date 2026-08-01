@@ -38,12 +38,12 @@ class PreinvoiceController extends Controller {
 
     public function index() {
         $title = __('preinvoice.preinvoices');
+        // باگ ۱: پیش‌فاکتورها به‌جای فاکتورها نمایش داده می‌شدند (is_invoice=true)
         $list = Preinvoice::query()->with('request')
             ->where('is_invoice', false)
             ->where('status', '!=', 'financial')
             ->whereHas('request')
-            ->orderBy('created_at', 'desc')
-            ->orderBy('id', 'desc')
+            ->orderBy('id', 'asc')
             ->get();
         return view('preinvoice.list', compact('list', 'title'));
     }
