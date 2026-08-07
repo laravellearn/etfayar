@@ -136,81 +136,81 @@ if ($request->filled('telephone')) {
     return $customer_code;
     }
 
-    public function store(Request $request): RedirectResponse
-    {
-        // باگ ۲۱: فرم شماره‌های اضافی را با نام mobiles[] (فرمت: mobile@telephone@owner) ارسال می‌کند
-        // اما saveUserMobiles از group_mobile (آرایه آبجکت) می‌خواند — اینجا تبدیل می‌کنیم
-        $groupMobile = collect($request->input('mobiles', []))
-            ->map(function ($item) {
-                $parts = explode('@', $item);
-                return [
-                    'mobile'       => $parts[0] ?? null,
-                    'telephone'    => $parts[1] ?? null,
-                    'mobile_owner' => $parts[2] ?? null,
-                ];
-            })
-            ->filter(fn($item) => !empty($item['mobile']))
+public function store(Request $request): RedirectResponse
+{
+    // ردیف‌های خالیِ شماره تماس اضافه رو قبل از اعتبارسنجی حذف کن؛ وگرنه چند مقدار
+    // خالی/تکراری در group_mobile باعث شکست قانون distinct می‌شن و بدون خطای قابل توجه
+    // فرم ذخیره نمی‌شه.
+    $request->merge([
+        'group_mobile' => collect($request->group_mobile ?? [])
+            ->filter(fn($item) => !empty($item['mobile'] ?? null))
             ->values()
-            ->all();
-        $request->merge(['group_mobile' => $groupMobile]);
+            ->all(),
+    ]);
 
-        $request->validate([
-            'name'          => 'required_if:identity_type,natural',
-            'family'        => 'required_if:identity_type,natural',
-            'gender'        => 'required_if:identity_type,natural',
-            'company'       => 'required_if:identity_type,legal',
-            'identity_type' => 'required',
-            'telephone'     => 'nullable|required_if:mobile,null|unique:users',
-            'mobile'        => 'nullable|required_if:telephone,null|unique:users|size:11',
-            'city_id'       => 'required',
-            'address'       => 'required',
-        ]);
+    $request->validate([
+        'name' => 'required_if:identity_type,natural',
+        'family' => 'required_if:identity_type,natural',
+        'gender' => 'required_if:identity_type,natural',
+        'company' => 'required_if:identity_type,legal',
+        'identity_type' => 'required',
+        'telephone' => 'nullable|required_if:mobile,null|unique:users',
+        'mobile' => 'nullable|required_if:telephone,null|unique:users|size:11',
+        "group_mobile" => "nullable|array",
+        "group_mobile.*.mobile" => "nullable|distinct|size:11",
+        'city_id' => 'required',
+        'address' => 'required',
+    ]);
 
-        DB::beginTransaction();
-        try {
-            $user = new User();
-            $user->name                = $request->name;
-            $user->family              = $request->family;
-            $user->national_code       = $request->national_code;
-            $user->economic_code       = $request->economic_code;
-            $user->registration_number = $request->registration_number;
-            $user->gender              = $request->gender;
-            $user->identity_type       = $request->identity_type;
-            $user->mobile              = $request->mobile;
-            $user->company             = $request->company;
-            $user->website             = $request->website;
-            $user->connector_name      = $request->connector_name;
-            $user->connector_position  = $request->connector_position;
-            $user->expert_id           = auth('admin')->user()->id;
-            $user->acquaintance_id     = $request->acquaintance_id;
-            $user->telephone           = $request->telephone;
-            $user->mobile_owner        = $request->mobile_owner;
-            $user->email               = $request->email;
-            $user->customer_code       = $this->generate_customer_code();
-            $user->notes               = $request->notes;
-            $user->save();
+    DB::beginTransaction();
+    try {
+        $user = new User();
+        $user->name = $request->name;
+        $user->family = $request->family;
+        $user->national_code = $request->national_code;
+        $user->economic_code = $request->economic_code;
+        $user->registration_number = $request->registration_number;
+        $user->gender = $request->gender;
+        $user->identity_type = $request->identity_type;
+        $user->mobile = $request->mobile;
+        $user->company = $request->company;
+        $user->website = $request->website;
+        $user->connector_name = $request->connector_name;
+        $user->connector_position = $request->connector_position;
+        $user->expert_id = auth('admin')->user()->id;
+        $user->acquaintance_id = $request->acquaintance_id;
+        $user->telephone = $request->telephone;
+        $user->mobile_owner = $request->mobile_owner;
+        $user->email = $request->email;
+        $user->customer_code = $this->generate_customer_code();
+        $user->notes = $request->notes;
+        $user->save();
 
-            $userAddress          = new UserAddress();
-            $userAddress->user_id = $user->id;
-            $this->saveAddress($request, $userAddress);
+        $userAddress = new UserAddress();
+        $userAddress->user_id = $user->id;
+        $this->saveAddress($request, $userAddress);
 
-            $this->saveUserMobiles($request, $user);
+        // اصلاح: استفاده از group_mobile به جای mobiles
+        $this->saveUserMobiles($request, $user);
 
-            $user->services()->sync($request->services ?? []);
+        $user->services()->sync($request->services);
 
-            DB::commit();
-            SmsSender::user_registered($user);
+        DB::commit();
+        SmsSender::user_registered($user);
 
-            return redirect()->route('user.show', $user->id)->with('status', 'با موفقیت ثبت شد');
-        } catch (\Exception $e) {
-            DB::rollback();
-            Log::error($e->getMessage());
-            // باگ ۱۹: dd() دیباگ حذف شد — خطا به‌درستی به کاربر نمایش داده می‌شود
-            return back()
-                ->withInput()
-                ->with('error', 'خطایی در ثبت کاربر رخ داد. لطفاً دوباره تلاش کنید.');
-        }
+        return redirect()->route('user.show', $user->id)->with('status', 'با موفقیت ثبت شد');
+    } catch (\Exception $e) {
+        DB::rollback();
+        Log::error($e->getMessage());
+
+    dd($e->getMessage());   // یا return $e->getMessage();
+
+        // بازگشت به صفحه قبل با پیام خطا
+        return back()
+            ->withInput()
+            ->with('error', 'خطایی در ثبت کاربر رخ داد. لطفاً دوباره تلاش کنید.');
     }
+}
 
 
     public function show($id) {

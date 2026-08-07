@@ -45,8 +45,4 @@ return [
     'collect_description'=>'توضیحات جمع آوری',
     'delivery_description'=>'توضیحات تحویل',
     'description'=>'توضیحات',
-    // باگ ۵: اضافه کردن کلید ترجمه زمان برنامه‌ریزی‌شده جمع‌آوری (collect_time)
-    'collect_time'       => 'زمان جمع آوری',
-    'delivery_time'      => 'زمان تحویل',
-    'schedule'           => 'برنامه زمانی',
 ];

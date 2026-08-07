@@ -85,54 +85,47 @@ class NotificationController extends Controller {
     }
 
     public function received() {
-        $adminId = auth('admin')->id();
+        $roles = auth('admin')->user()->roles->toArray();
+        $collect_roles = collect($roles);
+        $roles_id = $collect_roles->pluck('id');
+        $str_roles_id = $roles_id->map(function ($item, $key) {
+            return $item . '';
+        })->toArray();
 
-        $roles    = auth('admin')->user()->roles;
-        $strRoles = $roles->pluck('id')->map(fn($id) => (string)$id)->toArray();
+        //dump($str_roles_id);
 
-        // باگ ۷ و ۸: جلوگیری از نوتیفیکیشن تکراری با استفاده از collection و unique
-        $seenIds = collect();
-        $all     = collect();
-
-        // نوتیف‌های مبتنی بر نقش
-        foreach ($strRoles as $roleId) {
-            Notification::whereJsonContains('roles', $roleId)
-                ->where('status', 1)
-                ->orderByDesc('created_at')
-                ->get()
-                ->each(function ($n) use (&$seenIds, &$all) {
-                    if (!$seenIds->contains($n->id)) {
-                        $seenIds->push($n->id);
-                        $all->push($n);
+        $list = array();
+        foreach ($str_roles_id as $item) {
+            $notifs = Notification::query()->whereJsonContains('roles', $item)->where('status', 1)->orderByDesc('created_at')->get();
+            if (!is_null($notifs)) {
+                foreach ($notifs as $notif) {
+                    if (!in_array($notif, $list)) {
+                        $list[] = $notif;
                     }
-                });
+                }
+            }
+
         }
 
-        // نوتیف‌های مستقیم به این ادمین
-        Notification::where('admin_id', $adminId)
+        // نوتیفیکیشن‌هایی که مستقیم برای همین ادمین ارسال شدن (نه بر اساس نقش)
+        $directNotifs = Notification::query()
+            ->where('admin_id', auth('admin')->id())
             ->where('status', 1)
             ->orderByDesc('created_at')
-            ->get()
-            ->each(function ($n) use (&$seenIds, &$all) {
-                if (!$seenIds->contains($n->id)) {
-                    $seenIds->push($n->id);
-                    $all->push($n);
-                }
-            });
+            ->get();
+        foreach ($directNotifs as $notif) {
+            if (!in_array($notif, $list)) {
+                $list[] = $notif;
+            }
+        }
 
-        // مرتب‌سازی نهایی بر اساس تاریخ
-        $all = $all->sortByDesc('created_at');
+        usort($list, function ($a, $b) {
+            return $b->created_at <=> $a->created_at;
+        });
 
-        // باگ ۹: جداسازی خوانده‌شده و نخوانده
-        $readIds = AdminNotification::where('admin_id', $adminId)
-            ->pluck('notification_id')
-            ->toArray();
-
-        $unreadList = $all->filter(fn($n) => !in_array($n->id, $readIds))->values();
-        $readList   = $all->filter(fn($n) =>  in_array($n->id, $readIds))->values();
-
+        //dd($notifications);
         $title = __('notification.received');
-        return view('notification.list_received', compact('unreadList', 'readList', 'title'));
+        return view('notification.list_received', compact('list', 'title'));
     }
 
     /**

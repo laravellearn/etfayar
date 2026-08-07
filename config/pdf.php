@@ -18,7 +18,7 @@ return [
 
     'tempDir' => storage_path('app/pdf-temp'),
 
-    'font_path' => public_path('fonts'),
+    'font_path' => base_path('../fonts'),
 
     'default_font' => 'iransans',
 

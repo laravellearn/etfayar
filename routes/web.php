@@ -345,3 +345,9 @@ Artisan::call('optimize');
 
     return nl2br(Artisan::output() . "\n\nتمام دستورات با موفقیت اجرا شدند.");
 });
+
+Route::get('/optimize', function () {
+    
+Artisan::call('optimize');
+
+});
