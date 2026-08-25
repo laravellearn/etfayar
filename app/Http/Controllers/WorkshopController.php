@@ -44,13 +44,29 @@ class WorkshopController extends Controller {
             : [];
 
         $workshop->items()->delete();
-        if (!empty($request->group_item)) {
+
+        // اگر «داغی ندارد» تیک خورده باشه، هیچ آیتمی نباید ثبت بشه؛ حتی اگه ردیف
+        // خالیِ پیش‌فرضِ فرم (repeater) هم همراه درخواست ارسال شده باشه.
+        $hasNoFireExtinguisherPart = $request->has('has_no_fire_extinguisher_part');
+
+        if (!$hasNoFireExtinguisherPart && !empty($request->group_item)) {
 
             foreach ($request->group_item as $item) {
+                // ردیف‌های خالی/انتخاب‌نشده (مثلاً همون گزینه‌ی پیش‌فرض «انتخاب قطعه داغی...»
+                // با value="null") رو نادیده می‌گیریم؛ وگرنه کوئری زیر چیزی پیدا نمی‌کنه،
+                // fire_extinguisher_part_id نامعتبر (رشته‌ی "null") ذخیره می‌شه و ثبت با خطا مواجه می‌شه.
+                if (empty($item['fireExtinguisherPart_id']) || $item['fireExtinguisherPart_id'] === 'null') {
+                    continue;
+                }
+
+                $fireExtinguisherPart = FireExtinguisherPart::where('id', '=', $item['fireExtinguisherPart_id'])->first();
+                if (is_null($fireExtinguisherPart)) {
+                    continue;
+                }
+
                 $workshopItem = new WorkshopItem();
                 $workshopItem->workshop_id = $workshop->id;
                 $workshopItem->fire_extinguisher_part_id = $item['fireExtinguisherPart_id'];
-                $fireExtinguisherPart = FireExtinguisherPart::where('id', '=', $item['fireExtinguisherPart_id'])->first();
                 $workshopItem->count = $item['count'];
                 // اگر این قطعه قبلاً برای همین داغی ثبت شده بود، قیمت قبلی (فریزشده) حفظ
                 // می‌شه؛ فقط برای قطعه‌ی تازه‌اضافه‌شده از قیمت فعلیِ لیست قیمت استفاده می‌شه.

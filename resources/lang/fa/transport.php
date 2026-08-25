@@ -22,6 +22,8 @@ return [
     'uploaded' => 'بارگذاری شده',
     'not_upload' => 'بارگذاری نشده',
     'get_date' => 'تاریخ جمع آوری',
+    'collect_time' => 'تاریخ و ساعت جمع‌آوری',
+    'delivery_time' => 'تاریخ و ساعت تحویل',
     'drivers' => 'رانندگان',
     'collect' => 'جمع آوری',
     'delivery' => 'تحویل',

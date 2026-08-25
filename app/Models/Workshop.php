@@ -17,7 +17,7 @@ class Workshop extends Model {
     }
 
     public function items() {
-        return $this->hasMany(WorkshopItem::class);
+        return $this->hasMany(WorkshopItem::class)->orderBy('id');
     }
 
 

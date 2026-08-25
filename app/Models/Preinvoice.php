@@ -18,7 +18,7 @@ class Preinvoice extends Model {
     }
 
     public function items() {
-        return $this->hasMany(PreinvoiceItem::class);
+        return $this->hasMany(PreinvoiceItem::class)->orderBy('id');
     }
 
     public function payments() {
@@ -36,7 +36,7 @@ class Preinvoice extends Model {
     }
 
     public function descriptions() {
-        return $this->hasMany(PreinvoiceDescription::class);
+        return $this->hasMany(PreinvoiceDescription::class)->orderBy('id');
     }
 
     public function information() {

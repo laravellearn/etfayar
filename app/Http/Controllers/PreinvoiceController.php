@@ -79,6 +79,13 @@ class PreinvoiceController extends Controller {
         $itemList = [];
         $single = Preinvoice::with('items', 'workshop.items.fireExtinguisherPart', 'descriptions.description')->where('id', '=', $id)->firstOrFail();
 
+        // اگر این پیش‌فاکتور قبلاً به فاکتور تبدیل شده (is_invoice = true)، دیگه
+        // نباید صفحه‌ی قدیمیِ «پیش فاکتور» نمایش داده بشه؛ باید همون فاکتور واقعی
+        // (که همین رکورده، فقط با وضعیت فاکتور‌شده) نمایش داده بشه.
+        if ($single->is_invoice) {
+            return redirect()->route('invoice.show', $id);
+        }
+
         foreach ($single->items as $item) {
             $itemList[] = ['title' => $item->title, 'count' => $item->count, 'price' => $item->price, 'sum_price' => $item->count * $item->price,];
         }

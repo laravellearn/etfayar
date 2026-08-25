@@ -234,7 +234,6 @@ class CreatePdf {
         $totalPrice = collect($itemList)->sum('sum_price');
         $tax = $single->tax;
 
-        shuffle($itemList);
         require_once app_path() . '/Helpers/Number2Word.php';
         $number = new Number2Word();
 
