@@ -107,6 +107,12 @@ class TransporterController extends Controller {
             $single->delivery_status = 'pending_delivery';
         }
 
+        // اولین باری که این ترابری به یک راننده (جمع‌آوری یا تحویل) ارجاع داده
+        // می‌شه، تاریخش رو ثبت می‌کنیم (فقط یک بار، برای گزارش «ارجاع به راننده»).
+        if (is_null($single->driver_assigned_at) && (!is_null($single->collect_driver_id) || !is_null($single->delivery_driver_id))) {
+            $single->driver_assigned_at = now();
+        }
+
         $single->save();
 
         $customerName = $single->preinvoice->request->user->full_name ?? '';
@@ -242,6 +248,9 @@ class TransporterController extends Controller {
     public function update_collector_status(Request $request) {
         $transport = Transport::query()->where('id', '=', $request->id)->first();
         $transport->collect_driver_id = $request->collect_driver_id;
+        if (is_null($transport->driver_assigned_at) && !is_null($request->collect_driver_id)) {
+            $transport->driver_assigned_at = now();
+        }
         $transport->save();
 
         if (!is_null($request->collect_driver_id)) {
@@ -268,6 +277,9 @@ class TransporterController extends Controller {
     public function update_delivery_status(Request $request) {
         $transport = Transport::query()->where('id', '=', $request->id)->first();
         $transport->delivery_driver_id = $request->delivery_driver_id;
+        if (is_null($transport->driver_assigned_at) && !is_null($request->delivery_driver_id)) {
+            $transport->driver_assigned_at = now();
+        }
         $transport->save();
 
         if (!is_null($request->delivery_driver_id)) {

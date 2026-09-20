@@ -22,6 +22,7 @@ use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PreinvoiceController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SettingsController;
@@ -312,6 +313,23 @@ Route::prefix('admin')->group(function () {
 
     Route::get('/charge_card/settings', [SettingsController::class, 'charge_card'])->name('charge_card.settings')->middleware('permission:Charge Card Settings');
     Route::post('/charge_card/store_settings', [SettingsController::class, 'store_charge_card'])->name('charge_card.store_settings')->middleware('permission:Charge Card Settings');
+
+    // -------------------------------------------------------------------
+    // داشبورد گزارشات
+    // -------------------------------------------------------------------
+    Route::get('/reports/customers-requests', [ReportController::class, 'customersRequests'])->name('reports.customers_requests')->middleware('permission:Access Reports');
+    Route::get('/reports/invoices-revenue', [ReportController::class, 'invoicesRevenue'])->name('reports.invoices_revenue')->middleware('permission:Access Reports');
+    Route::get('/reports/transport-workshop', [ReportController::class, 'transportWorkshop'])->name('reports.transport_workshop')->middleware('permission:Access Reports');
+    Route::get('/reports/services-accounts', [ReportController::class, 'servicesAccounts'])->name('reports.services_accounts')->middleware('permission:Access Reports');
+
+    Route::get('/reports/data/trend/{metric}', [ReportController::class, 'trend'])->name('reports.data.trend')->middleware('permission:Access Reports');
+    Route::get('/reports/data/compare/{metric}', [ReportController::class, 'compare'])->name('reports.data.compare')->middleware('permission:Access Reports');
+    Route::get('/reports/data/charge-revenue/trend', [ReportController::class, 'chargeRevenueTrend'])->name('reports.data.charge_revenue.trend')->middleware('permission:Access Reports');
+    Route::get('/reports/data/charge-revenue/compare', [ReportController::class, 'chargeRevenueCompare'])->name('reports.data.charge_revenue.compare')->middleware('permission:Access Reports');
+    Route::get('/reports/data/conversion-rate', [ReportController::class, 'conversionRate'])->name('reports.data.conversion_rate')->middleware('permission:Access Reports');
+    Route::get('/reports/data/acquaintance-breakdown', [ReportController::class, 'acquaintanceBreakdown'])->name('reports.data.acquaintance_breakdown')->middleware('permission:Access Reports');
+    Route::get('/reports/data/requests-by-service', [ReportController::class, 'requestsByService'])->name('reports.data.requests_by_service')->middleware('permission:Access Reports');
+    Route::get('/reports/data/bank-balances', [ReportController::class, 'bankBalances'])->name('reports.data.bank_balances')->middleware('permission:Access Reports');
 
 
 Route::get('/user/{id}/requests', [UserController::class, 'requests'])->name('user.requests');
