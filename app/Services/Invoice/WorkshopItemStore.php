@@ -18,6 +18,7 @@ class WorkshopItemStore {
                 $workshopItem->count = $item['count'];
                 $workshopItem->price = $fireExtinguisherPart->price;
                 $workshopItem->title = $fireExtinguisherPart->title;
+                $workshopItem->sent_date = now()->toDateString();
                 $workshopItem->save();
             }
 

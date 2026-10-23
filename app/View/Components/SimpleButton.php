@@ -15,7 +15,9 @@ class SimpleButton extends Component {
     public function __construct($title, $url, $permission = null, $target = null) {
         $this->permission = $permission;
         $this->title = $title;
-        $this->url = $url;
+        $this->url = is_null($url)
+            ? null
+            : html_entity_decode($url, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $this->target = $target;
     }
 

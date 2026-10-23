@@ -6,6 +6,7 @@ use App\Models\AdminNotification;
 use App\Models\Notification;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Nette\Utils\Json;
 
 class NotificationController extends Controller {
@@ -123,9 +124,37 @@ class NotificationController extends Controller {
             return $b->created_at <=> $a->created_at;
         });
 
-        //dd($notifications);
+        // تفکیک اطلاعیه‌ها به «مشاهده نشده» و «مشاهده شده» برای ادمین جاری
+        // (مشاهده شده = برای این ادمین رکوردی در admin_notifications ثبت شده باشد)
+        $readIds = AdminNotification::query()
+            ->where('admin_id', auth('admin')->id())
+            ->pluck('notification_id')
+            ->toArray();
+
+        $unread_list = array();
+        $read_list = array();
+        foreach ($list as $notif) {
+            if (in_array($notif->id, $readIds)) {
+                $read_list[] = $notif;
+            } else {
+                $unread_list[] = $notif;
+            }
+        }
+
+        // صفحه‌بندی لیست «مشاهده شده» (۱۰ تا در هر صفحه) تا صفحه طولانی نشود
+        $perPage = 10;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage('read_page');
+        $read_paginator = new LengthAwarePaginator(
+            array_slice($read_list, ($currentPage - 1) * $perPage, $perPage),
+            count($read_list),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'pageName' => 'read_page']
+        );
+        $read_paginator->fragment('read-list');
+
         $title = __('notification.received');
-        return view('notification.list_received', compact('list', 'title'));
+        return view('notification.list_received', compact('list', 'unread_list', 'read_list', 'read_paginator', 'title'));
     }
 
     /**

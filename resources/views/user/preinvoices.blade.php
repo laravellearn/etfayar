@@ -41,7 +41,12 @@
                                 @if($item->request->user_id == $user->id)
                                 <tr class="text-center">
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->code }}</td>
+                                    <td>
+                                        {{ $item->code }}
+                                        @if($item->is_invoice)
+                                            <div><span class="label label-lg font-weight-bold label-light-success label-inline">فاکتور شده</span></div>
+                                        @endif
+                                    </td>
                                     <td>{{ $item->request->user->full_name ?? '' }}</td>
                                     <td>{{ $item->title }}</td>
                                     <td>{{ count($item->items) + count($item->workshop->items ?? []) }}</td>
@@ -58,6 +63,58 @@
                                         @endforeach
                                     </td>
                                     <td nowrap>
+                                        @if($item->is_invoice)
+                                        @php
+                                            $adminUser = auth('admin')->user();
+                                            $showPermission = $adminUser && $adminUser->can('Show Invoice') ? 'Show Invoice' : 'Show Preinvoice';
+                                            $showUrl = $adminUser && $adminUser->can('Edit Invoice') ? route('invoice.show', $item->id) : route('preinvoice.show', $item->id);
+                                        @endphp
+                                        {{-- دکمه‌های فاکتور: دقیقاً همان مسیرها و دسترسی‌های صفحه‌ی «لیست فاکتورها» --}}
+                                        <x-FormButton permission="Create Charge Card"
+                                                      url="{{ route('invoice.create_charge_card', $item->id) }}"
+                                                      :icon="__('icon.charge_card_icon')"
+                                                      :title="__('invoice.create_charge_card')"
+                                                      click="null" target="_blank"/>
+                                        <x-FormButton permission="Create Custom Invoice"
+                                                      url="{{ route('custom_invoice.invoice.create', $item->id) }}"
+                                                      :icon="__('icon.percent_icon')"
+                                                      :title="__('invoice.create_custom_invoice')"
+                                                      click="null" target="_blank"/>
+                                        @if(isset($item->information) && $item->information->header_type==1)
+                                            <x-FormButton permission="Download Official Invoice"
+                                                          url="{{ route('invoice.official.download', $item->id) }}"
+                                                          :icon="__('icon.official_invoice_icon')"
+                                                          :title="__('invoice.download_official_invoice')"
+                                                          click="null" target="_blank"/>
+                                        @endif
+                                        @if(isset($item->information) && $item->information->header_type==0)
+                                            <x-FormButton permission="Download Unofficial Invoice"
+                                                          url="{{ route('preinvoice.unofficial.custom.download', $item->id) }}"
+                                                          :icon="__('icon.unofficial_invoice_icon')"
+                                                          :title="__('invoice.download_unofficial_invoice')"
+                                                          click="null" target="_blank"/>
+                                        @endif
+                                        <x-FormButton :permission="$showPermission"
+                                                      url="{{ $showUrl }}"
+                                                      :icon="__('icon.show_icon')"
+                                                      title="مشاهده فاکتور"
+                                                      click="null" target="_blank"/>
+                                        <x-FormButton permission="Access Payments"
+                                                      url="{{ route('payments', $item->id) }}"
+                                                      :icon="__('icon.payment_icon')"
+                                                      :title="__('payment.title')"
+                                                      click="null"/>
+                                        <x-FormButton permission="Edit Invoice"
+                                                      url="{{ route('invoice.edit', $item->id) }}"
+                                                      :icon="__('icon.edit_icon')"
+                                                      :title="__('common.edit')"
+                                                      click="null"/>
+                                        <x-FormButton permission="Delete Invoice"
+                                                      url="javascript:;"
+                                                      :icon="__('icon.delete_icon')"
+                                                      :title="__('common.delete')"
+                                                      click="deleteDialog('{{__('common.delete')}}','{{__('common.areYouSureDelete')}}','/admin/invoice/delete/{{$item->id}}')"/>
+                                    @else
                                         {{-- دکمه‌های پیش‌فاکتور (کامل) --}}
                                         <x-FormButton permission="Create Charge Card"
                                                       url="{{ route('preinvoice.create_charge_card', $item->id) }}"
@@ -83,10 +140,12 @@
                                                           :title="__('invoice.download_unofficial_invoice')"
                                                           click="null" target="_blank"/>
                                         @endif
+                                        {{-- دکمه مشاهده: برای پیش‌فاکتور عادی صفحه‌ی پیش‌فاکتور، و برای پیش‌فاکتورِ تبدیل‌شده به فاکتور (is_invoice)
+                                             صفحه‌ی فاکتور نمایش داده می‌شود. (تصمیم بین این دو داخل PreinvoiceController@show گرفته می‌شود.) --}}
                                         <x-FormButton permission="Show Preinvoice"
                                                       url="{{ route('preinvoice.show', $item->id) }}"
                                                       :icon="__('icon.show_icon')"
-                                                      :title="__('preinvoice.show')"
+                                                      :title="$item->is_invoice ? 'مشاهده فاکتور' : __('preinvoice.show')"
                                                       click="null" target="_blank"/>
                                         <x-FormButton permission="Send To Financial"
                                                       url="javascript:;"
@@ -103,6 +162,8 @@
                                                       :icon="__('icon.delete_icon')"
                                                       :title="__('common.delete')"
                                                       click="deleteDialog('{{__('common.delete')}}','{{__('common.areYouSureDelete')}}','/admin/preinvoice/delete/{{$item->id}}')"/>
+                                    
+                                        @endif
                                     </td>
                                 </tr>
                                 @endif

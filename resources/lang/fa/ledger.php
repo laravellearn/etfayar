@@ -20,4 +20,10 @@ return [
     'rejected' => 'پرداخت‌های رد شده',
     'submitted_by' => 'ثبت‌کننده',
     'no_records' => 'رکوردی یافت نشد.',
+    'all_accounts' => 'همه‌ی حساب‌ها',
+    'date_from' => 'از تاریخ',
+    'date_to' => 'تا تاریخ',
+    'apply_filter' => 'اعمال فیلتر',
+    'clear_filter' => 'حذف فیلترها',
+    'official_with_tax' => 'فاکتور رسمی (شامل :tax٪ مالیات)',
 ];

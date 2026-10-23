@@ -34,7 +34,7 @@
                                 <th>@lang('user.code')</th>
                                 <th>@lang('preinvoice.customer')</th>
                                 <th>@lang('transport.charge_receipts')</th>
-                                <th nowrap>@lang('common.created_at')</th>
+                                <th nowrap>تاریخ ارسال به کارگاه</th>
                                 <th>@lang('common.actions')</th>
                             </tr>
                             </thead>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html direction="rtl" dir="rtl">
+<html direction="rtl" dir="rtl" lang="fa">
 <!--begin::Head-->
 @include('layout.head')
 <!--end::Head-->

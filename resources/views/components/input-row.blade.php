@@ -5,7 +5,7 @@
         </div>
         <div class="col-md-9">
             <div class="">
-                <input  type="{{$type}}" class="form-control  form-control-color" name="{{$name}}" id="{{$id}}" placeholder="{{$title}}" value="{{$value}}" min="{{$min}}" {{$disabled}}>
+                <input  type="{{$type}}" class="form-control  form-control-color" name="{{$name}}" id="{{$id}}" placeholder="{{$title}}" value="{{$value}}" min="{{$min}}" @if($step) step="{{$step}}" @endif {{$disabled}}>
                 <span class="form-text text-muted">{{$caption}}</span>
                 <div class="form-control-position">
                     @if($type=='file' && isset($image))

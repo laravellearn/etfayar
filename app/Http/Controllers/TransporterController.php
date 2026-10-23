@@ -142,6 +142,7 @@ class TransporterController extends Controller {
             ->where('collect_driver_id', '=', $expert_id)
             ->where('collect_time', '=', null)
             ->where('is_deposit',0)
+            ->notCancelled('collect')
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -149,6 +150,7 @@ class TransporterController extends Controller {
             ->where('delivery_driver_id', '=', $expert_id)
             ->where('delivery_time', '=', null)
             ->where('is_deposit',0)
+            ->notCancelled('delivery')
             ->orderBy('created_at', 'desc')
             ->get();
 

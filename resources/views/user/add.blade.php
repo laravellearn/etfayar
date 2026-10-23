@@ -373,7 +373,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="la la-mobile"></i></span></div>
                                         <input type="text" class="form-control" name="mobile_additional" id="mobileInput"
-                                               value="" placeholder="@lang('user.mobile')" required>
+                                               value="" placeholder="@lang('user.mobile')">
                                     </div>
                                 </div>
                             </div>
@@ -396,7 +396,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text"><i class="la la-phone"></i></span></div>
                                         <input type="text" class="form-control" name="telephone_additional" id="telephoneInput"
-                                               value="" placeholder="@lang('user.telephone')" required>
+                                               value="" placeholder="@lang('user.telephone')">
                                     </div>
                                 </div>
                             </div>
@@ -606,6 +606,12 @@ let mobileInput = document.getElementById("mobileInput");
 let telephoneInput = document.getElementById("telephoneInput");
 let mobileOwnerInput = document.getElementById("mobileOwnerInput");
 
+// شمارنده‌ی ایندکس ردیف‌های group_mobile؛ باید با نام فیلدی که کنترلر
+// می‌خونه (group_mobile[idx][mobile|telephone|mobile_owner]) یکی باشه،
+// وگرنه (مثل قبل که نام فیلد mobiles[] بود) هیچ‌کدوم از شماره‌های اضافه
+// ذخیره نمی‌شن.
+let additionalMobileIndex = 0;
+
 document.getElementById("addMobileNumberButton").addEventListener("click", function () {
     let mobileNumber = mobileInput.value.trim();
     let phoneNumber = telephoneInput.value.trim();
@@ -614,13 +620,15 @@ document.getElementById("addMobileNumberButton").addEventListener("click", funct
         alert("لطفاً حداقل شماره همراه یا تلفن را وارد کنید.");
         return;
     }
-    let inputValue = mobileNumber + '@' + phoneNumber + '@' + mobileOwner;
     $('#addMobileModal').modal('hide');
 
+    let idx = additionalMobileIndex++;
     let inputContainer = document.createElement('div');
     inputContainer.classList.add("row", "mt-1");
     inputContainer.innerHTML =
-        "<input type='hidden' value='" + inputValue + "' class='col-9 form-control' name='mobiles[]' style='padding:5px;' readonly/>" +
+        "<input type='hidden' value='" + mobileNumber + "' name='group_mobile[" + idx + "][mobile]'/>" +
+        "<input type='hidden' value='" + phoneNumber + "' name='group_mobile[" + idx + "][telephone]'/>" +
+        "<input type='hidden' value='" + mobileOwner + "' name='group_mobile[" + idx + "][mobile_owner]'/>" +
         "<input type='text' value='" + mobileNumber + "' class='col-3 form-control m-1' style='padding:5px;' disabled/>" +
         "<input type='text' value='" + phoneNumber + "' class='col-3 form-control m-1' style='padding:5px;' disabled/>" +
         "<input type='text' value='" + mobileOwner + "' class='col-3 form-control m-1' style='padding:5px;' disabled/>" +

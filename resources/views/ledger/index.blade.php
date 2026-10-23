@@ -22,9 +22,30 @@
 
                     <div class="card-body">
                         <!--begin: فیلتر و جستجو-->
-                        <form method="get" action="{{route('ledger.index')}}" class="form mb-5">
+                        <form method="get" action="{{route('ledger.index')}}" class="form mb-5" autocomplete="off">
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-3 mb-3">
+                                    <label>@lang('ledger.bank_account')</label>
+                                    <select class="form-control" name="bank_id" onchange="this.form.submit()">
+                                        <option value="">@lang('ledger.all_accounts')</option>
+                                        @foreach($banks as $bank)
+                                            <option value="{{$bank->id}}" {{request('bank_id')==$bank->id?'selected':''}}>
+                                                {{$bank->name}}{{ !empty($bank->account) ? ' - '.$bank->account : '' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label>@lang('ledger.date_from')</label>
+                                    <input type="text" class="form-control" name="date_from" id="date_from"
+                                           value="{{request('date_from')}}" placeholder="@lang('ledger.date_from')">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label>@lang('ledger.date_to')</label>
+                                    <input type="text" class="form-control" name="date_to" id="date_to"
+                                           value="{{request('date_to')}}" placeholder="@lang('ledger.date_to')">
+                                </div>
+                                <div class="col-md-3 mb-3">
                                     <label>@lang('ledger.filter')</label>
                                     <select class="form-control" name="status_filter" onchange="this.form.submit()">
                                         <option value="all" {{request('status_filter')=='all'||!request('status_filter')?'selected':''}}>@lang('ledger.status_all')</option>
@@ -33,7 +54,9 @@
                                         <option value="settled" {{request('status_filter')=='settled'?'selected':''}}>@lang('ledger.status_settled')</option>
                                     </select>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
                                     <label>@lang('ledger.search')</label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="search"
@@ -44,6 +67,10 @@
                                             </button>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-md-6 mb-3 d-flex align-items-end">
+                                    <button class="btn btn-primary mr-2" type="submit">@lang('ledger.apply_filter')</button>
+                                    <a href="{{route('ledger.index')}}" class="btn btn-secondary">@lang('ledger.clear_filter')</a>
                                 </div>
                             </div>
                         </form>
@@ -76,7 +103,12 @@
                                         </td>
                                         <td nowrap>{{$row->bank_account??'-'}}</td>
                                         <td nowrap>{{$row->persian_date}}</td>
-                                        <td nowrap>{{number_format($row->debit,0,'.',',')}}</td>
+                                        <td nowrap>
+                                            {{number_format($row->debit,0,'.',',')}}
+                                            @if($row->is_official)
+                                                <div class="text-muted font-size-xs">@lang('ledger.official_with_tax', ['tax' => $row->tax_percent + 0])</div>
+                                            @endif
+                                        </td>
                                         <td nowrap>{{number_format($row->credit,0,'.',',')}}</td>
                                         <td nowrap>{{number_format($row->remaining,0,'.',',')}}</td>
                                         <td nowrap>
@@ -111,4 +143,27 @@
             </div>
         </div>
     </div>
+    <script>
+        // انتخاب تاریخ شمسی برای بازه‌ی گزارش (مثل فیلد تاریخ مراجعه در پیش‌فاکتور)
+        (function () {
+            var ledgerDateOptions = {
+                placeholder: "روز / ماه / سال"
+                , twodigit: true
+                , closeAfterSelect: true
+                , nextButtonIcon: "fa fa-arrow-circle-right"
+                , previousButtonIcon: "fa fa-arrow-circle-left"
+                , buttonsColor: "blue"
+                , forceFarsiDigits: false
+                , pastYearsCount: 10
+                , futureYearsCount: 2
+                , markToday: true
+                , markHolidays: false
+                , highlightSelectedDay: false
+                , sync: true
+                , gotoToday: true
+            };
+            kamaDatepicker('date_from', ledgerDateOptions);
+            kamaDatepicker('date_to', ledgerDateOptions);
+        })();
+    </script>
 @endsection

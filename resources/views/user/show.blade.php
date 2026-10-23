@@ -38,6 +38,16 @@
                             <h3 class="text-dark font-weight-bold mb-10">اطلاعات مشتری:</h3>
 
                             <div class="form-group row">
+                                <label class="col-3">تاریخ مشتری شدن</label>
+                                <div class="col-9">
+                                    <div class="input-group">
+                                        <input class="form-control form-control" type="text"
+                                               value="{{$user->persianDate}}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
                                 <label class="col-3">@lang("user.customer_code")</label>
                                 <div class="col-9">
                                     <div class="input-group">
@@ -408,7 +418,7 @@
                 <div class="card-toolbar">
                     <x-FormButton permission="Add User Support"
                                   url="{{route('user_support.create',$user->id)}}"
-                                  :icon="__('icon.add_icon')"
+                                  :icon="__('icon.plus_icon')"
                                   :title="__('user_support.add')"
                                   click="null">
                     </x-FormButton>

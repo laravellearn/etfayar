@@ -237,7 +237,7 @@
                                                 <td nowrap>
 
                                                     <x-FormButton permission="Access Transporter Preinvoice"
-                                                                  url="{{ $item->preinvoice->request->user->address->location??'' }}"
+                                                                  :url="$item->preinvoice->request->user->address->location??''"
                                                                   :icon="__('icon.location_icon')"
                                                                   :title="__('transporter.show_location')"
                                                                   click="null"></x-FormButton>

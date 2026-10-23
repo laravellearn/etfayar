@@ -22,54 +22,82 @@
                     </div>
 
                     <div class="card-body">
-                        <!--begin: جدول داده ها-->
-                        <table class="table table-separate table-head-custom table-bordered table-striped"
-                               id="kt_datatable_requests">
-                            <thead>
-                            <tr>
-                                <th>@lang('notification.id')</th>
-                                <th>@lang('notification.sender')</th>
-                                <th>@lang('notification.title')</th>
-                                <th>@lang('notification.body')</th>
-                                <th>@lang('common.status')</th>
-                                <th>@lang('common.created_at')</th>
-                                <th>@lang('common.actions')</th>
-                            </tr>
-                            </thead>
 
-                            <tbody>
-                            @forelse($list as $item)
+                        @foreach([
+                            ['key' => 'unread', 'items' => $unread_list, 'tid' => 'kt_datatable_requests'],
+                            ['key' => 'read', 'items' => $read_paginator, 'tid' => 'kt_datatable_requests_read'],
+                        ] as $group)
+                            <h4 class="mb-4 {{ $group['key'] == 'unread' ? '' : 'mt-10' }}" @if($group['key'] == 'read') id="read-list" @endif>
+                                @if($group['key'] == 'unread')
+                                    <span class="label label-lg label-light-danger label-inline font-weight-bold">
+                                        @lang('notification.unread_list') ({{ count($group['items']) }})
+                                    </span>
+                                @else
+                                    <span class="label label-lg label-light-success label-inline font-weight-bold">
+                                        @lang('notification.read_list') ({{ $read_paginator->total() }})
+                                    </span>
+                                @endif
+                            </h4>
 
+                            <!--begin: جدول داده ها-->
+                            <table class="table table-separate table-head-custom table-bordered table-striped"
+                                   id="{{ $group['tid'] }}">
+                                <thead>
                                 <tr>
-                                    <td nowrap>{{$item->id}}</td>
-                                    <td nowrap>{{$item->sender->full_name??''}}</td>
-                                    <td nowrap>{{$item->title??''}}</td>
-                                    <td>{{$item->body??''}}</td>
-                                    <td>
-                                        <div class="{{$item->statusValue->class}}">{{$item->statusValue->title}}</div>
-                                    </td>
-                                    <td nowrap>{{$item->persianDateTime}}</td>
-                                    <td nowrap>
-
-                                        <x-FormButton permission="Access Received Notifications"
-                                                      url="{{route('notification.open',$item->id)}}"
-                                                      :icon="__('icon.show_icon')"
-                                                      :title="__('common.show')"
-                                                      click="null">
-
-                                        </x-FormButton>
-
-
-                                    </td>
+                                    <th>@lang('notification.id')</th>
+                                    <th>@lang('notification.sender')</th>
+                                    <th>@lang('notification.title')</th>
+                                    <th>@lang('notification.body')</th>
+                                    <th>@lang('common.status')</th>
+                                    <th>@lang('common.created_at')</th>
+                                    <th>@lang('common.actions')</th>
                                 </tr>
-                            @empty
+                                </thead>
 
+                                <tbody>
+                                @forelse($group['items'] as $item)
+                                    <tr class="{{ $group['key'] == 'unread' ? 'font-weight-bolder' : '' }}">
+                                        <td nowrap>{{$item->id}}</td>
+                                        <td nowrap>{{$item->sender->full_name??''}}</td>
+                                        <td nowrap>{{$item->title??''}}</td>
+                                        <td>{{$item->body??''}}</td>
+                                        <td nowrap>
+                                            @if($group['key'] == 'unread')
+                                                <div class="label label-lg font-weight-bold label-light-danger label-inline">@lang('notification.unread')</div>
+                                            @else
+                                                <div class="label label-lg font-weight-bold label-light-success label-inline">@lang('notification.read')</div>
+                                            @endif
+                                        </td>
+                                        <td nowrap>{{$item->persianDateTime}}</td>
+                                        <td nowrap>
 
-                            @endforelse
-                            </tbody>
+                                            <x-FormButton permission="Access Received Notifications"
+                                                          url="{{route('notification.open',$item->id)}}"
+                                                          :icon="__('icon.show_icon')"
+                                                          :title="__('common.show')"
+                                                          click="null">
 
-                        </table>
-                        <!--end: جدول داده ها-->
+                                            </x-FormButton>
+
+                                        </td>
+                                    </tr>
+                                @empty
+                                @endforelse
+                                </tbody>
+
+                            </table>
+                            @if($group['key'] == 'read' && $read_paginator->hasPages())
+                                <div class="d-flex justify-content-center mt-5">
+                                    {{ $read_paginator->links('pagination::bootstrap-4') }}
+                                </div>
+                            @endif
+                            @if(count($group['items']) == 0)
+                                <div class="text-center text-muted mb-5">
+                                    {{ $group['key'] == 'unread' ? __('notification.no_unread') : __('notification.no_read') }}
+                                </div>
+                            @endif
+                            <!--end: جدول داده ها-->
+                        @endforeach
                     </div>
                 </div>
                 <!--end::Card-->

@@ -54,15 +54,21 @@
                     @php($caption='')
                     @php($value=$single->price)
                     <x-InputRow :title="$title" name="price" id="price" :value="$value" type="number" :min="0"
-                                :caption="$caption" icon="bx bx-money"/>
+                                step="0.01" :caption="$caption" icon="bx bx-money"/>
 
                     @if($canSetPaymentDate)
                         @php($title=__("payment.payment_date"))
                         @php($caption=__("payment.payment_date_hint"))
                         @php($value=$single->persianPaymentDate)
-                        <x-InputRow dir="ltr" :title="$title" name="payment_date" id="payment_date" :value="$value"
-                                    :caption="$caption" type="text" icon="bx bx-calendar">
-                        </x-InputRow>
+                        <x-InputPersianDate :title="$title" name="payment_date" id="payment_date" :value="$value"
+                                             icon="bx bx-calendar">
+                        </x-InputPersianDate>
+                        <div class="form-group row">
+                            <div class="col-3"></div>
+                            <div class="col-9">
+                                <span class="text-muted font-size-sm">{{$caption}}</span>
+                            </div>
+                        </div>
                     @else
                         @php($title=__("payment.payment_date"))
                         @php($value=$single->persianPaymentDate??'-')

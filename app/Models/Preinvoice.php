@@ -157,7 +157,7 @@ class Preinvoice extends Model {
         if (isset($this->workshop) && $this->workshop->status == 1 && $this->workshop->has_no_fire_extinguisher_part) {
             $status = new \stdClass();
             $status->title = 'شارژ شد و داغی ندارد';
-            $status->class = 'text-nowrap mb-2 label label-md font-weight-bold label-light-warning label-inline';
+            $status->class = 'text-nowrap mb-2 label label-md font-weight-bold label-light-success label-inline';
             $workshopStatus[] = $status;
         }
 

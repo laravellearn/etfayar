@@ -22,6 +22,23 @@ class Transport extends Model {
         return $this->belongsTo(Preinvoice::class);
     }
 
+    /**
+     * حذف رکوردهای کنسل‌شده از لیست وظایف رانندگان
+     * (مثلاً وقتی راننده هنگام بارگذاری رسید شارژ تیک «کنسل شد» را می‌زند).
+     * $type: 'collect' برای لیست جمع‌آوری، 'delivery' برای لیست تحویل.
+     * شرط‌ها NULL-safe هستند تا رکوردهای قدیمی که این ستون‌ها را ندارند حذف نشوند.
+     */
+    public function scopeNotCancelled($query, $type = 'collect') {
+        $column = $type === 'delivery' ? 'delivery_status' : 'collect_status';
+        return $query
+            ->where(function ($q) {
+                $q->whereNull('status')->orWhere('status', '!=', 'cancel');
+            })
+            ->where(function ($q) use ($column) {
+                $q->whereNull($column)->orWhere($column, '!=', 'cancel');
+            });
+    }
+
     public function collect_driver() {
         return $this->belongsTo(Admin::class, 'collect_driver_id');
     }

@@ -59,16 +59,23 @@
                     @php($title=__("payment.price"))
                     @php($caption='')
                     @php($value='')
-                    <x-InputRow :title="$title" name="price" id="price" :value="$value" type="number" :min="0"
+                    <x-InputRow dir="ltr" :title="$title" name="price" id="price" :value="$value" type="text"
                                 :caption="$caption" icon="bx bx-money"/>
 
                     @if(auth('admin')->user()->hasAnyRole(\App\Http\Controllers\PaymentController::FINANCIAL_ROLES))
                         @php($title=__("payment.payment_date"))
                         @php($caption=__("payment.payment_date_hint"))
-                        @php($value='')
-                        <x-InputRow dir="ltr" :title="$title" name="payment_date" id="payment_date" :value="$value"
-                                    :caption="$caption" type="text" icon="bx bx-calendar">
-                        </x-InputRow>
+                        @php
+                            $value = old('payment_date') ?: \Hekmatinasser\Verta\Verta::now()->format('Y/m/d');
+                        @endphp
+                        <x-InputRow :title="$title" name="payment_date" id="payment_date" :value="$value"
+                                    caption="" type="text" icon="bx bx-calendar"/>
+                        <div class="form-group row">
+                            <div class="col-3"></div>
+                            <div class="col-9">
+                                <span class="text-muted font-size-sm">{{$caption}}</span>
+                            </div>
+                        </div>
                     @endif
 
                     <div class="form-group">
@@ -104,4 +111,75 @@
         </div>
         <!--end::Card-->
     </div>
+    <script>
+        // تاریخ واریزی: انتخاب با datepicker شمسی، مقدار پیش‌فرض = تاریخ امروز
+        (function () {
+            var paymentDateOptions = {
+                placeholder: "روز / ماه / سال"
+                , twodigit: true
+                , closeAfterSelect: true
+                , nextButtonIcon: "fa fa-arrow-circle-right"
+                , previousButtonIcon: "fa fa-arrow-circle-left"
+                , buttonsColor: "blue"
+                , forceFarsiDigits: false
+                , pastYearsCount: 5
+                , futureYearsCount: 1
+                , markToday: true
+                , markHolidays: false
+                , highlightSelectedDay: false
+                , sync: true
+                , gotoToday: true
+            };
+            if (document.getElementById('payment_date') && typeof kamaDatepicker === 'function') {
+                kamaDatepicker('payment_date', paymentDateOptions);
+            }
+
+            // مبلغ: جداکننده‌ی سه رقم سه رقم هنگام تایپ
+            var priceInput = document.getElementById('price');
+            if (priceInput) {
+                var persianDigits = {'۰': '0', '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9',
+                    '٠': '0', '١': '1', '٢': '2', '٣': '3', '٤': '4', '٥': '5', '٦': '6', '٧': '7', '٨': '8', '٩': '9'};
+
+                function rawNumber(v) {
+                    v = String(v).replace(/[۰-۹٠-٩]/g, function (d) {
+                        return persianDigits[d];
+                    });
+                    v = v.replace(/[\u066B]/g, '.');          // ممیز عربی
+                    return v.replace(/[^0-9.]/g, '');
+                }
+
+                function formatNumber(v) {
+                    v = rawNumber(v);
+                    var parts = v.split('.');
+                    var intPart = parts[0].replace(/^0+(?=\d)/, '');
+                    intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    if (parts.length > 1) {
+                        return intPart + '.' + parts.slice(1).join('').substring(0, 2);
+                    }
+                    return intPart;
+                }
+
+                priceInput.setAttribute('inputmode', 'decimal');
+                priceInput.setAttribute('autocomplete', 'off');
+                priceInput.addEventListener('input', function () {
+                    var pos = priceInput.selectionStart;
+                    var before = priceInput.value.length;
+                    priceInput.value = formatNumber(priceInput.value);
+                    var after = priceInput.value.length;
+                    try {
+                        priceInput.setSelectionRange(pos + (after - before), pos + (after - before));
+                    } catch (e) {
+                    }
+                });
+
+                // قبل از ارسال فرم، کاماها حذف می‌شوند تا مقدار خام (بدون جداکننده) ذخیره شود
+                var form = priceInput.closest('form');
+                if (form) {
+                    form.addEventListener('submit', function () {
+                        priceInput.value = rawNumber(priceInput.value);
+                    });
+                }
+            }
+        })();
+    </script>
 @endsection

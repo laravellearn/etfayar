@@ -54,6 +54,12 @@
                                                 </div>
                                             </div>
                                             <div class="col-lg-4">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" disabled="disabled"
+                                                           dir="ltr"
+                                                           value="{{ $workshopItem['persian_sent_date'] ?? '' }}"
+                                                           placeholder="@lang('workshop.sent_date')">
+                                                </div>
                                             </div>
 
                                             <div class="col-lg-2">
@@ -82,6 +88,13 @@
                                             <div class="input-group">
                                                 <input type="number" name="count" id="count" min="0" class="form-control"
                                                        placeholder="@lang('preinvoice.count')">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-2">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" disabled="disabled" dir="ltr"
+                                                       value="@lang('workshop.today_will_be_recorded')">
                                             </div>
                                         </div>
 

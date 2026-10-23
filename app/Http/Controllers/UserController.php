@@ -143,7 +143,18 @@ public function store(Request $request): RedirectResponse
     // فرم ذخیره نمی‌شه.
     $request->merge([
         'group_mobile' => collect($request->group_mobile ?? [])
-            ->filter(fn($item) => !empty($item['mobile'] ?? null))
+            ->map(function ($item) {
+                // مقدار خالی رو صراحتاً null می‌کنیم تا قانون nullable در
+                // اعتبارسنجی زیر واقعاً روی این ردیف اعمال بشه (رشته‌ی خالی
+                // با نال یکی نیست و قانون size:11 رو رد می‌کرد).
+                $item['mobile'] = !empty($item['mobile'] ?? null) ? $item['mobile'] : null;
+                $item['telephone'] = !empty($item['telephone'] ?? null) ? $item['telephone'] : null;
+                return $item;
+            })
+            // ردیف رو فقط وقتی حذف کن که نه موبایل نه تلفن داشته باشه؛ قبلاً
+            // اینجا فقط mobile چک می‌شد و همین باعث می‌شد «شماره ثابتِ
+            // به‌تنهایی» قبل از اعتبارسنجی و ذخیره، بی‌صدا حذف بشه.
+            ->filter(fn($item) => !empty($item['mobile']) || !empty($item['telephone']))
             ->values()
             ->all(),
     ]);
@@ -247,7 +258,12 @@ public function update(Request $request): RedirectResponse
     // فرم ذخیره نمی‌شه.
     $request->merge([
         'group_mobile' => collect($request->group_mobile ?? [])
-            ->filter(fn($item) => !empty($item['mobile'] ?? null))
+            ->map(function ($item) {
+                $item['mobile'] = !empty($item['mobile'] ?? null) ? $item['mobile'] : null;
+                $item['telephone'] = !empty($item['telephone'] ?? null) ? $item['telephone'] : null;
+                return $item;
+            })
+            ->filter(fn($item) => !empty($item['mobile']) || !empty($item['telephone']))
             ->values()
             ->all(),
     ]);
@@ -320,7 +336,12 @@ public function update(Request $request): RedirectResponse
 
         $userAddress->city_id = $request->city_id;
         $userAddress->address = $request->address;
-        $userAddress->location = $request->location;
+        // لینک‌های بلد ممکن است هنگام ذخیره/ویرایش از قبل به شکل HTML entity
+        // (مثل &amp;) ارسال شده باشند. مقدار URL را به حالت واقعی برگردان تا
+        // در لینک رانندگان دوباره &amp; به‌صورت متن وارد URL نشود.
+        $userAddress->location = is_null($request->location)
+            ? null
+            : html_entity_decode($request->location, ENT_QUOTES | ENT_HTML5, 'UTF-8');
         $userAddress->area = $request->area;
         $userAddress->latitude = $request->latitude;
         $userAddress->longitude = $request->longitude;
@@ -332,12 +353,15 @@ public function update(Request $request): RedirectResponse
     private function saveUserMobiles(Request $request, $user) {
         if (!empty($request->group_mobile)) {
             foreach ($request->group_mobile as $item) {
-                if (!is_null($item['mobile'])) {
+                // قبلاً فقط وقتی mobile خالی نبود ردیف ذخیره می‌شد؛ به همین
+                // دلیل «شماره ثابتِ به‌تنهایی» (بدون موبایل) هیچ‌وقت ذخیره
+                // نمی‌شد. حالا کافیه یکی از موبایل یا تلفن مقدار داشته باشه.
+                if (!empty($item['mobile']) || !empty($item['telephone'])) {
                     $mobile = new Mobile();
                     $mobile->user_id = $user->id;
-                    $mobile->mobile = $item['mobile'];
-                    $mobile->telephone = $item['telephone'];
-                    $mobile->mobile_owner = $item['mobile_owner'];
+                    $mobile->mobile = $item['mobile'] ?? null;
+                    $mobile->telephone = $item['telephone'] ?? null;
+                    $mobile->mobile_owner = $item['mobile_owner'] ?? null;
                     $user->mobiles()->save($mobile);
                 }
             }

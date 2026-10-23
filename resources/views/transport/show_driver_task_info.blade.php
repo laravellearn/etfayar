@@ -93,7 +93,7 @@
                             <div class="input-group input-group-lg">
                                 <x-SimpleButton permission="Access Transporter Preinvoice"
                                                 :title="__('transporter.show_location')"
-                                                url="{{$single->preinvoice->request->user->address->location??''}}"></x-SimpleButton>
+                                                :url="$single->preinvoice->request->user->address->location??''"></x-SimpleButton>
 
                                 {{--<div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="la la-mobile"></i></span></div>

@@ -81,7 +81,7 @@
                                 <x-SimpleButton permission="Access User Location"
                                                 :title="__('transport.show_location')"
                                                 target="_blank"
-                                                url="{{$single->preinvoice->request->user->address->location??''}}"></x-SimpleButton>
+                                                :url="$single->preinvoice->request->user->address->location??''"></x-SimpleButton>
 
                                 {{--<div class="input-group-prepend"><span class="input-group-text"><i
                                                 class="la la-mobile"></i></span></div>
@@ -146,10 +146,34 @@
                     </x-InputRow>
 
 
-                    @php($title=__("preinvoice.visit_time"))
+                    @php($title=__("preinvoice.visit_time_from_1"))
                     @php($caption='')
-                    @php($value=$single->visitTimeRangeText??'')
-                    <x-InputRow dir="ltr" :title="$title" name="visit_time" id="visit_time" :value="$value"
+                    @php($value=$single->visit_time_from_1 ? substr($single->visit_time_from_1,0,5) : '')
+                    <x-InputRow dir="ltr" :title="$title" name="visit_time_from_1" id="visit_time_from_1" :value="$value"
+                                :caption="$caption" type="text"
+                                icon="bx bx-time" disabled="disabled">
+                    </x-InputRow>
+
+                    @php($title=__("preinvoice.visit_time_to_1"))
+                    @php($caption='')
+                    @php($value=$single->visit_time_to_1 ? substr($single->visit_time_to_1,0,5) : '')
+                    <x-InputRow dir="ltr" :title="$title" name="visit_time_to_1" id="visit_time_to_1" :value="$value"
+                                :caption="$caption" type="text"
+                                icon="bx bx-time" disabled="disabled">
+                    </x-InputRow>
+
+                    @php($title=__("preinvoice.visit_time_from_2"))
+                    @php($caption='')
+                    @php($value=$single->visit_time_from_2 ? substr($single->visit_time_from_2,0,5) : '')
+                    <x-InputRow dir="ltr" :title="$title" name="visit_time_from_2" id="visit_time_from_2" :value="$value"
+                                :caption="$caption" type="text"
+                                icon="bx bx-time" disabled="disabled">
+                    </x-InputRow>
+
+                    @php($title=__("preinvoice.visit_time_to_2"))
+                    @php($caption='')
+                    @php($value=$single->visit_time_to_2 ? substr($single->visit_time_to_2,0,5) : '')
+                    <x-InputRow dir="ltr" :title="$title" name="visit_time_to_2" id="visit_time_to_2" :value="$value"
                                 :caption="$caption" type="text"
                                 icon="bx bx-time" disabled="disabled">
                     </x-InputRow>

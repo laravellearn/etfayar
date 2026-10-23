@@ -16,6 +16,7 @@ class InputRow extends Component {
     public $image = null;
     public $disabled = null;
     public $min = null;
+    public $step = null;
 
     /**
      * Create a new component instance.
@@ -24,7 +25,7 @@ class InputRow extends Component {
      */
 
 
-    public function __construct($title = null, $caption = null, $name = null, $id = null, $value = null, $icon = null, $image = null, $type = 'text', $disabled = null, $min = null) {
+    public function __construct($title = null, $caption = null, $name = null, $id = null, $value = null, $icon = null, $image = null, $type = 'text', $disabled = null, $min = null, $step = null) {
         $this->title = $title;
         $this->caption = $caption;
         $this->name = $name;
@@ -35,6 +36,7 @@ class InputRow extends Component {
         $this->type = $type;
         $this->disabled = $disabled;
         $this->min = $min;
+        $this->step = $step;
     }
 
     /**

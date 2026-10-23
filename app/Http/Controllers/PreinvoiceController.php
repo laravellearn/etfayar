@@ -82,8 +82,37 @@ class PreinvoiceController extends Controller {
         // اگر این پیش‌فاکتور قبلاً به فاکتور تبدیل شده (is_invoice = true)، دیگه
         // نباید صفحه‌ی قدیمیِ «پیش فاکتور» نمایش داده بشه؛ باید همون فاکتور واقعی
         // (که همین رکورده، فقط با وضعیت فاکتور‌شده) نمایش داده بشه.
+        // توجه: قبلاً اینجا با redirect به route('invoice.show') می‌رفتیم؛ چون آن مسیر
+        // مجوز جداگانه‌ای (Edit Invoice) می‌خواهد که ممکن است کاربر آن را نداشته باشد،
+        // به‌جای redirect مستقیماً همان صفحه‌ی نمایش فاکتور را همین‌جا برمی‌گردانیم.
         if ($single->is_invoice) {
-            return redirect()->route('invoice.show', $id);
+            $invoiceItemList = [];
+            foreach ($single->items as $item) {
+                $invoiceItemList[] = ['title' => $item->title, 'count' => $item->count, 'price' => $item->price, 'sum_price' => $item->count * $item->price,];
+            }
+
+            $invoiceWorkshopItems = $single->workshop->items ?? null;
+            if (!is_null($invoiceWorkshopItems)) {
+                foreach ($invoiceWorkshopItems as $item) {
+                    if (!is_null($item->fireExtinguisherPart)) {
+                        $invoiceItemList[] = ['title' => $item->title, 'count' => $item->count, 'price' => $item->price, 'sum_price' => $item->count * $item->price,];
+                    }
+                }
+            }
+
+            $invoiceTotalPrice = collect($invoiceItemList)->sum('sum_price');
+            $invoiceTitle = " فاکتور " . $single->code;
+            $invoicePaymentPrice = $invoiceTotalPrice + ($invoiceTotalPrice * $single->tax / 100);
+            $invoiceDescriptions = $single->descriptions;
+
+            return view('invoice.single', [
+                'title' => $invoiceTitle,
+                'single' => $single,
+                'totalPrice' => $invoiceTotalPrice,
+                'itemList' => $invoiceItemList,
+                'paymentPrice' => $invoicePaymentPrice,
+                'descriptions' => $invoiceDescriptions,
+            ]);
         }
 
         foreach ($single->items as $item) {

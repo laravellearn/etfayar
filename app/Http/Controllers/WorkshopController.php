@@ -43,6 +43,13 @@ class WorkshopController extends Controller {
             ? $workshop->items()->pluck('price', 'fire_extinguisher_part_id')->all()
             : [];
 
+        // به همین ترتیب، تاریخ روز ارسال (sent_date) هر قطعه هم باید بین ویرایش‌های
+        // بعدی حفظ بشه؛ وگرنه با هر بار ذخیره‌ی فرم، تاریخ قطعات قبلاً ثبت‌شده هم
+        // به تاریخ امروز تغییر می‌کرد.
+        $previousSentDates = $workshop->exists
+            ? $workshop->items()->pluck('sent_date', 'fire_extinguisher_part_id')->all()
+            : [];
+
         $workshop->items()->delete();
 
         // اگر «داغی ندارد» تیک خورده باشه، هیچ آیتمی نباید ثبت بشه؛ حتی اگه ردیف
@@ -72,6 +79,9 @@ class WorkshopController extends Controller {
                 // می‌شه؛ فقط برای قطعه‌ی تازه‌اضافه‌شده از قیمت فعلیِ لیست قیمت استفاده می‌شه.
                 $workshopItem->price = $previousPrices[$item['fireExtinguisherPart_id']] ?? $fireExtinguisherPart->price;
                 $workshopItem->title = $fireExtinguisherPart->title;
+                // اگر این قطعه قبلاً برای همین داغی ثبت شده بود، تاریخ ارسال قبلی‌اش
+                // حفظ می‌شه؛ فقط برای قطعه‌ی تازه‌اضافه‌شده تاریخ امروز ثبت می‌شه.
+                $workshopItem->sent_date = $previousSentDates[$item['fireExtinguisherPart_id']] ?? now()->toDateString();
                 $workshopItem->save();
             }
 
